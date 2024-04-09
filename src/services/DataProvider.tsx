@@ -7,16 +7,17 @@ export const dataProvider : DataProvider = {
     // @ts-ignore
     getList: async (resource: any, params: any) => {
         try {
-            const {pageNum, pageSize} = params.pagination;
+            const {page, perPage} = params.pagination;
             const {field, order} = params.sort;
             const query = {
                 filter: JSON.stringify(fetchUtils.flattenObject(params.filter)),
                 sort: field,
                 order: order,
-                start: (pageNum - 1) * pageSize,
-                end: pageNum * pageSize,
+                page: page - 1,
+                perPage: perPage,
             };
-            const {json} = await httpClient(`${apiUrl}/${resource}/find-all?${fetchUtils.queryParameters(query)}`, {
+
+            const {json} = await httpClient(`${apiUrl}/${resource}?${fetchUtils.queryParameters(query)}`, {
                 method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -24,15 +25,41 @@ export const dataProvider : DataProvider = {
                 }),
                 // credentials: 'include',
             })
+            console.log("start: ", query)
             console.log("json: ", json)
             return {
-                data: json,
-                total: parseInt(json.totalElements, 5),
+                data: json.content,
+                total: parseInt(json.totalElements, 10),
             }
 
         } catch (err: any) {
         }
     },
+    getOne: (resource: any, params: any) =>
+        httpClient(`${apiUrl}/${resource}/${params.id}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }),
+            // credentials: 'include',
+        }).then(({json}) => {
+            return ({
+                data: json
+            })
+        }),
+    delete: async (resource: any, params: any) =>
+         await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+            method: 'DELETE',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                // credentials: 'include',
+            })
+        }).then(({json}) => ({
+            data: json,
+        })),
+    deleteMany: (resource: any, params: any) => Promise.resolve({data: []}),
 }
 
 // export default dataProvider
