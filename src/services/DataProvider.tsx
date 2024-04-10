@@ -3,7 +3,8 @@ import {DataProvider, fetchUtils} from 'react-admin'
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
 
-export const dataProvider : DataProvider = {
+// @ts-ignore
+export const dataProvider: DataProvider = {
     // @ts-ignore
     getList: async (resource: any, params: any) => {
         try {
@@ -25,8 +26,6 @@ export const dataProvider : DataProvider = {
                 }),
                 // credentials: 'include',
             })
-            console.log("start: ", query)
-            console.log("json: ", json)
             return {
                 data: json.content,
                 total: parseInt(json.totalElements, 10),
@@ -48,18 +47,47 @@ export const dataProvider : DataProvider = {
                 data: json
             })
         }),
-    delete: async (resource: any, params: any) =>
-         await httpClient(`${apiUrl}/${resource}/${params.id}`, {
-            method: 'DELETE',
+    // @ts-ignore
+    create: async (resource: any, params: any) => {
+        console.log(params)
+        // try {
+        const {json} = await httpClient(`${apiUrl}/${resource}`, {
+            method: 'POST',
+            body: JSON.stringify(params.data),
+
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
-                // credentials: 'include',
-            })
-        }).then(({json}) => ({
-            data: json,
-        })),
-    deleteMany: (resource: any, params: any) => Promise.resolve({data: []}),
+            }),
+            // credentials: 'include'
+        })
+        // switch to window /#/resource
+        window.location.href = `/#/${resource}`
+        return Promise.resolve({data: json});
+        // }
+    }
+    // catch (error: any) {
+    //     if (error.status === 401) {
+    //         // @ts-ignore
+    //         authProvider.logout().then(r => console.log(r));
+    //         window.location.href = '/#/login';
+    //     }
+    // }
+    // }
+    ,
+    update: async (resource: any, params: any) => {
+        console.log(params)
+        const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(params.data),
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }),
+            // credentials: 'include'
+        })
+        return Promise.resolve({data: json});
+    },
 }
 
 // export default dataProvider
