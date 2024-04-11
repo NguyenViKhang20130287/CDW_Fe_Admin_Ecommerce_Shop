@@ -1,6 +1,6 @@
 import React from 'react';
 import {Admin, Resource} from "react-admin";
-import UserList from "./components/UserList";
+import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
 import authProvider from "./services/AuthProvider";
 
