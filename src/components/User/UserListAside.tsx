@@ -7,7 +7,7 @@ import {
 import {FilterList, FilterListItem, FilterLiveSearch} from "react-admin";
 import LockIcon from '@mui/icons-material/Lock'
 
-const UserSide = () => {
+export const UserListAside = () => {
     return (
         <Card
             sx={{
@@ -28,4 +28,4 @@ const UserSide = () => {
     )
 }
 
-export default UserSide
+// export default UserListAside

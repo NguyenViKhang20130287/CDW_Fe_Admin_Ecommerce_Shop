@@ -5,15 +5,15 @@ import {
     DatagridConfigurable,
     DeleteButton,
     EditButton,
-    ExportButton,
+    ExportButton, FunctionField,
     List,
     Pagination,
-    SelectColumnsButton,
+    SelectColumnsButton, ShowButton,
     TextField,
     TopToolbar
 }
     from "react-admin";
-import UserSide from "./UserSide";
+import {UserListAside} from "./UserListAside";
 
 const UserList = (props: any) => {
 
@@ -27,19 +27,22 @@ const UserList = (props: any) => {
 
     return (
         <List {...props}
-              pagination={<Pagination rowsPerPageOptions={[5, 10, 15, 20]}/>}
-              // filters={isSmall ? visitorFilters : undefined}
-              sort={{field: 'fullName', order: 'DESC'}}
-            // perPage={3}
-            aside={<UserSide/>}
+            // filters={isSmall ? visitorFilters : undefined}
+              sort={{field: 'fullName', order: 'ASC'}}
+              aside={<UserListAside/>}
               actions={<VisitorListActions/>}
         >
-            <DatagridConfigurable>
+            <DatagridConfigurable
+            rowClick={"show"}
+            >
                 <TextField label={'ID'} source={'user.id'}/>
-                <TextField label={'Full Name'} source={'fullName'}/>
-                <TextField label={'Email'} source={'email'}/>
-                <TextField label={'Status'} source={`user.status`}/>
-                <TextField label={'Role'} source={`user.authorities[0].authority`}/>
+                <TextField label={'Họ và Tên'} source={'fullName'}/>
+                <FunctionField
+                    source="user.status"
+                    label="Trạng thái"
+                    render={(record: { user: { status: boolean } }) => record.user.status ? "Hoạt động" : "Đã khóa"}
+                />
+                <TextField label={'Quyền'} source={`user.authorities[0].authority`}/>
                 <EditButton label={'Edit'}/>
                 <DeleteButton label={'Delete'}/>
             </DatagridConfigurable>
