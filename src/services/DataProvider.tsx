@@ -3,9 +3,8 @@ import {DataProvider, fetchUtils} from 'react-admin'
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
 
-// @ts-ignore
 export const dataProvider: DataProvider = {
-    // @ts-ignore
+// @ts-ignore
     getList: async (resource: any, params: any) => {
         try {
             const {page, perPage} = params.pagination;
@@ -26,6 +25,8 @@ export const dataProvider: DataProvider = {
                 }),
                 // credentials: 'include',
             })
+            console.log("Json: ", json)
+            console.log("Content: ", json.content)
             return {
                 data: json.content,
                 total: parseInt(json.totalElements, 10),
@@ -34,19 +35,33 @@ export const dataProvider: DataProvider = {
         } catch (err: any) {
         }
     },
-    getOne: (resource: any, params: any) =>
-        httpClient(`${apiUrl}/${resource}/${params.id}`, {
+    // getOne: async (resource: any, params: any) =>
+    //     await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+    //         method: 'GET',
+    //         headers: new Headers({
+    //             'Content-Type': 'application/json',
+    //             Accept: 'application/json',
+    //         }),
+    //         // credentials: 'include',
+    //     }).then(({json}) => {
+    //         return ({
+    //             data: json
+    //         })
+    //     }),
+
+    getOne: async (resource: any, params: any) => {
+        const { json } = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             }),
-            // credentials: 'include',
-        }).then(({json}) => {
-            return ({
-                data: json
-            })
-        }),
+        });
+        console.log("Params: ", params)
+        console.log("Data:", json)
+        return { data: json };
+    },
+
     // @ts-ignore
     create: async (resource: any, params: any) => {
         let category = null;
@@ -104,6 +119,3 @@ export const dataProvider: DataProvider = {
         return Promise.resolve({data: json});
     },
 }
-
-// export default dataProvider
-
