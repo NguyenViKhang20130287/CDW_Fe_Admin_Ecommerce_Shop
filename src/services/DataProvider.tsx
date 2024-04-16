@@ -92,7 +92,6 @@ export const dataProvider: DataProvider = {
         return Promise.resolve({data: json});
     },
     update: async (resource: any, params: any) => {
-        console.log(params)
         let category = null;
         if (resource === 'product') {
             const {json} = await httpClient(`${apiUrl}/category/${params.data.category.id}`, {
