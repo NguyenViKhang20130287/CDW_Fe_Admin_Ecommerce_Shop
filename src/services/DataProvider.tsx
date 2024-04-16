@@ -62,6 +62,34 @@ export const dataProvider: DataProvider = {
         return { data: json };
     },
 
+    getManyReference: async (resource: any, params: any) => {
+        const {page, perPage} = params.pagination;
+        const {field, order} = params.sort;
+        const query = {
+            filter: JSON.stringify({
+                ...fetchUtils.flattenObject(params.filter),
+                [params.target]: params.id,
+            }),
+            sort: field,
+            order: order,
+            page: page - 1,
+            perPage: perPage,
+        };
+        console.log(resource, params)
+        const {json} = await httpClient(`${apiUrl}/${resource}/category/${params.id}?${fetchUtils.queryParameters(query)}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }),
+        });
+        console.log(json)
+        return {
+            data: json.content,
+            total: parseInt(json.totalElements, 10),
+        };
+    },
+
     // @ts-ignore
     create: async (resource: any, params: any) => {
         let category = null;
@@ -112,7 +140,7 @@ export const dataProvider: DataProvider = {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             }),
-            // credentials: 'include'
+            credentials: 'include'
         })
         console.log(json)
         return Promise.resolve({data: json});

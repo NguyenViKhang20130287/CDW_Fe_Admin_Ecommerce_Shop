@@ -2,11 +2,22 @@ import {
     Edit,
     SimpleForm,
     TextInput,
-    required, useGetList, SelectArrayInputProps, BooleanInput, DateField, DateInput
+    required,
+    useGetList,
+    SelectArrayInputProps,
+    Labeled,
+    ReferenceManyField,
+    Datagrid, TextField, NumberField, EditButton, BooleanInput, useRecordContext
 } from 'react-admin';
 import React, {useEffect, useState} from "react";
-import {Category} from "../../types";
+import {Category, Promotion} from "../../types";
+import ThumbnailField from "../product/ThumbnailField";
 
+
+const CategoryTitle = () => {
+    const record = useRecordContext<Promotion>();
+    return record ? <span>{record.name}</span> : null;
+};
 export const CategoryEdit = (props: SelectArrayInputProps) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const {data}: any = useGetList<Category>('category', {
@@ -20,10 +31,40 @@ export const CategoryEdit = (props: SelectArrayInputProps) => {
         }
     }, [data]);
     return (
-        <Edit>
+        <Edit title={<CategoryTitle/>}>
             <SimpleForm>
                 <TextInput source="name" validate={required()}/>
                 <BooleanInput source="status" label="Trạng thái" defaultValue={false}/>
+                <Labeled label="Sản phẩm thuộc danh mục" fullWidth>
+                    <ReferenceManyField
+                        reference="product"
+                        target="category_id"
+                        perPage={20}
+                    >
+                        <Datagrid
+                            sx={{
+                                '& .column-thumbnail': {
+                                    width: 25,
+                                    padding: 0,
+                                },
+                            }}
+                        >
+                            <ThumbnailField source="thumbnail" label="" />
+                            <TextField source="name" />
+                            <NumberField
+                                source="price"
+                                options={{
+                                    style: "currency",
+                                    currency: "VND",
+                                }}
+                                label="Giá"
+                            />
+                            <NumberField source="quantity" />
+                            <NumberField source="sold" />
+                            <EditButton />
+                        </Datagrid>
+                    </ReferenceManyField>
+                </Labeled>
             </SimpleForm>
         </Edit>
     )
