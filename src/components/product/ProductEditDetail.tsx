@@ -3,7 +3,7 @@ import {
     BooleanInput,
     Edit,
     NumberInput,
-    required, SelectArrayInput, SelectArrayInputProps,
+    required, SelectArrayInput, SelectArrayInputProps, SelectInput,
     TextInput, useGetList,
 } from 'react-admin';
 import {InputAdornment, Grid} from '@mui/material';
@@ -47,7 +47,7 @@ export const ProductEditDetails = (props: SelectArrayInputProps) => {
                     fullWidth/>
             </Grid>
             <Grid item xs={12} sm={8}>
-                <SelectArrayInput
+                <SelectInput
                     source="category.id"
                     label="Danh mục"
                     choices={category}

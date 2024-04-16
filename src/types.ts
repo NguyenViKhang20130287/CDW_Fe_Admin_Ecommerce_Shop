@@ -32,3 +32,13 @@ export interface User extends RaRecord {
     isAdmin: boolean,
     status: boolean
 }
+
+export interface Color extends RaRecord {
+    id: number,
+    name: string
+}
+
+export interface Size extends RaRecord {
+    id: number,
+    name: string
+}
