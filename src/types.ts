@@ -42,3 +42,17 @@ export interface Size extends RaRecord {
     id: number,
     name: string
 }
+
+export interface Promotion extends RaRecord {
+    id: number,
+    name: string,
+    description: string,
+    discount_rate: number,
+    start_date: string,
+    end_date: string,
+    status: boolean,
+    created_at: string,
+    created_by: User,
+    updated_at: string,
+    updated_by: User
+}

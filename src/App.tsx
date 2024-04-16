@@ -18,6 +18,9 @@ import UserList from "./components/User/UserList";
 import {UserShow} from "./components/User/UserShow";
 import {UserEdit} from './components/User/UserEdit'
 import {PromotionList} from "./components/promotion/PromotionList";
+import {PromotionShow} from "./components/promotion/PromotionShow";
+import {PromotionCreate} from "./components/promotion/PromotionCreate";
+import {PromotionEdit} from "./components/promotion/PromotionEdit";
 
 function App() {
     return (
@@ -52,7 +55,10 @@ function App() {
             />
             <Resource name={'promotion'}
                       list={PromotionList}
+                      create={PromotionCreate}
+                      edit={PromotionEdit}
                       icon={PromotionIcon}
+                      show={PromotionShow}
                       options={{label: "Khuyến mãi"}}
             />
         </Admin>
