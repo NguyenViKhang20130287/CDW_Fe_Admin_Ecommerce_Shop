@@ -42,8 +42,8 @@ const UserList = (props: any) => {
                     label="Trạng thái"
                     render={(record: { user: { status: boolean } }) => record.user.status ? "Hoạt động" : "Đã khóa"}
                 />
-                <TextField label={'Quyền'} source={`user.authorities[0].authority`}/>
-                <EditButton label={'Edit'}/>
+                <TextField label={'Quyền'} source={`user.permission.name`}/>
+                <EditButton label={'Edit'} />
                 <DeleteButton label={'Delete'}/>
             </DatagridConfigurable>
         </List>

@@ -92,33 +92,32 @@ export const dataProvider: DataProvider = {
 
     // @ts-ignore
     create: async (resource: any, params: any) => {
-        let category = null;
-        if (resource === 'product') {
-            const {json} = await httpClient(`${apiUrl}/category/${params.data.category}`, {
-                method: 'GET',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                }),
-                // credentials: 'include'
-            })
-            category = json;
-        }
-        console.log(category)
-        console.log(params.data)
+        console.log(params)
+        // try {
         const {json} = await httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
-            body: JSON.stringify(category !== null ? {...params.data, category: category} : params.data),
+            body: JSON.stringify(params.data),
+
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             }),
             // credentials: 'include'
         })
-
+        // switch to window /#/resource
         window.location.href = `/#/${resource}`
         return Promise.resolve({data: json});
-    },
+        // }
+    }
+    // catch (error: any) {
+    //     if (error.status === 401) {
+    //         // @ts-ignore
+    //         authProvider.logout().then(r => console.log(r));
+    //         window.location.href = '/#/login';
+    //     }
+    // }
+    // }
+    ,
     update: async (resource: any, params: any) => {
         let category = null;
         if (resource === 'product') {
@@ -128,21 +127,20 @@ export const dataProvider: DataProvider = {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                 }),
-                // credentials: 'include'
+                credentials: 'include'
             })
             category = json;
         }
         console.log(params)
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
-            body: JSON.stringify(category !== null ? {...params.data, category: category} : params.data),
+            body: JSON.stringify(params.data),
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             }),
             credentials: 'include'
         })
-        console.log(json)
         return Promise.resolve({data: json});
     },
 }

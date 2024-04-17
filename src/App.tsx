@@ -1,6 +1,7 @@
-import {Admin, Resource, useGetList} from "react-admin";
+import React from 'react';
+import {Admin, radiantLightTheme, Resource} from "react-admin";
+import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
-import authProvider from "./services/AuthProvider";
 import CategoryList from "./components/category/CategoryList";
 import CategoryShow from "./components/category/CategoryShow";
 import CategoryIcon from '@mui/icons-material/CategoryRounded';
@@ -14,7 +15,6 @@ import {ProductShow} from "./components/product/ProductShow";
 import {ProductCreate} from "./components/product/ProductCreate";
 import {ProductEdit} from "./components/product/ProductEdit";
 import {UserCreate} from "./components/User/UserCreate";
-import UserList from "./components/User/UserList";
 import {UserShow} from "./components/User/UserShow";
 import {UserEdit} from './components/User/UserEdit'
 import {PromotionList} from "./components/promotion/PromotionList";
@@ -27,6 +27,7 @@ function App() {
         <Admin
             title="Admin"
             dataProvider={dataProvider}
+            theme={radiantLightTheme}
             disableTelemetry
             // authProvider={authProvider}
         >

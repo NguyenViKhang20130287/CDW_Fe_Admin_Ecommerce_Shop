@@ -20,9 +20,9 @@ export const UserCreate = (props: any) => {
                 </Grid>
 
                 <TextInput name={""} source={"address"} label={"Địa chỉ"}/>
-                <SelectInput name={""} label={"Quyền"} source={"role"} choices={[
-                    {id: '0', name: 'CUSTOMER'},
-                    {id: '1', name: 'ADMIN'}
+                <SelectInput name={""} label={"Quyền"} source={"permission"} choices={[
+                    {id: '1', name: 'ADMIN'},
+                    {id: '2', name: 'CUSTOMER'}
                 ]}/>
             </SimpleForm>
         </Create>
