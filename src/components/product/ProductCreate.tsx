@@ -2,13 +2,12 @@ import {
     ImageField,
     TabbedForm,
     TextInput,
-    useRecordContext,
     required,
-    NumberInput, BooleanInput, Create, SelectArrayInput, useGetList, ArrayInput, SimpleFormIterator,
+    NumberInput, BooleanInput, Create, useGetList, ArrayInput, SimpleFormIterator, SelectInput,
 } from "react-admin";
 import React, {useEffect, useState} from "react";
 import {Grid, InputAdornment} from "@mui/material";
-import {Category, Product} from "../../types";
+import {Category, Color, Size} from "../../types";
 
 
 const RichTextInput = React.lazy(() =>
@@ -20,8 +19,21 @@ const RichTextInput = React.lazy(() =>
 
 export const ProductCreate = (props: any) => {
     const [categories, setCategories] = useState<Category[]>([]);
+    const [colors, setColors] = useState<Color[]>([]);
+    const [sizes, setSizes] = useState<Size[]>([]);
+
     const {data}: any = useGetList<Category>('category', {
         pagination: {page: 1, perPage: 100},
+        sort: {field: 'name', order: 'ASC'},
+    });
+
+    const {data: listColor}: any = useGetList<Color>('color', {
+        pagination: {page: 1, perPage: 25},
+        sort: {field: 'name', order: 'ASC'},
+    });
+
+    const {data: listSize}: any = useGetList<Size>('size', {
+        pagination: {page: 1, perPage: 25},
         sort: {field: 'name', order: 'ASC'},
     });
 
@@ -29,7 +41,13 @@ export const ProductCreate = (props: any) => {
         if (data) {
             setCategories(data);
         }
-    }, [data]);
+        if (listColor) {
+            setColors(listColor);
+        }
+        if (listSize) {
+            setSizes(listSize);
+        }
+    }, [data, listColor, listSize]);
     return (
         <Create title={'Tạo sản phẩm'}>
             <TabbedForm>
@@ -38,7 +56,9 @@ export const ProductCreate = (props: any) => {
                     sx={{maxWidth: '40em'}}
                 >
                     <Grid container columnSpacing={2}>
+                        <Grid item xs={12} sm={12}>
                             <ImageField source="thumbnail" label="Thumbnail"/>
+                        </Grid>
                         <Grid item xs={12} sm={12}>
                             <ImageField source="imageProducts.link" src="url" label="image"/>
                         </Grid>
@@ -70,9 +90,9 @@ export const ProductCreate = (props: any) => {
                                 fullWidth/>
                         </Grid>
                         <Grid item xs={12} sm={8}>
-                            <SelectArrayInput label="Danh mục" source={"category"}
-                                              optionValue={"id"}
-                                              choices={categories} fullWidth validate={req}/>
+                            <SelectInput label="Danh mục" source={"category"}
+                                         optionValue={"id"}
+                                         choices={categories} fullWidth validate={req}/>
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <RichTextInput source="content" label="Mô tả" validate={req}/>
@@ -84,11 +104,11 @@ export const ProductCreate = (props: any) => {
                     path="description"
                     sx={{maxWidth: '100%'}}
                 >
-                    <ArrayInput source={`colorSizes`} label={`Thêm màu và size`} fullWidth>
+                     <ArrayInput source={`colorSizes`} label={`Thêm màu và size`} fullWidth>
                         <SimpleFormIterator>
                             <NumberInput source="quantity" label="Số lượng" defaultValue={0} disabled/>
-                            <TextInput source="color.name" label="Màu sắc"/>
-                            <TextInput source="size.name" label="Kích cỡ"/>
+                            <SelectInput source="color.id" label="Màu sắc" choices={colors} fullWidth/>
+                            <SelectInput source="size.id" label="Kích cỡ" choices={sizes} fullWidth/>
                         </SimpleFormIterator>
                     </ArrayInput>
                 </TabbedForm.Tab>

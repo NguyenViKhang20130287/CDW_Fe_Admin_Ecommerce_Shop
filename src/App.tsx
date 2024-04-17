@@ -7,6 +7,7 @@ import CategoryShow from "./components/category/CategoryShow";
 import CategoryIcon from '@mui/icons-material/CategoryRounded';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
+import PromotionIcon from '@mui/icons-material/LocalOffer';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -16,6 +17,10 @@ import {ProductEdit} from "./components/product/ProductEdit";
 import {UserCreate} from "./components/User/UserCreate";
 import {UserShow} from "./components/User/UserShow";
 import {UserEdit} from './components/User/UserEdit'
+import {PromotionList} from "./components/promotion/PromotionList";
+import {PromotionShow} from "./components/promotion/PromotionShow";
+import {PromotionCreate} from "./components/promotion/PromotionCreate";
+import {PromotionEdit} from "./components/promotion/PromotionEdit";
 
 function App() {
     return (
@@ -24,6 +29,7 @@ function App() {
             dataProvider={dataProvider}
             theme={radiantLightTheme}
             disableTelemetry
+            // authProvider={authProvider}
         >
             <Resource name={'user'}
                       list={UserList}
@@ -47,6 +53,14 @@ function App() {
                       icon={CategoryIcon}
                       show={CategoryShow}
                       options={{label: "Danh mục"}}
+            />
+            <Resource name={'promotion'}
+                      list={PromotionList}
+                      create={PromotionCreate}
+                      edit={PromotionEdit}
+                      icon={PromotionIcon}
+                      show={PromotionShow}
+                      options={{label: "Khuyến mãi"}}
             />
         </Admin>
     );
