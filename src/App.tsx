@@ -1,8 +1,7 @@
 import React from 'react';
-import {Admin, Resource} from "react-admin";
+import {Admin, radiantLightTheme, Resource} from "react-admin";
 import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
-import authProvider from "./services/AuthProvider";
 import CategoryList from "./components/category/CategoryList";
 import CategoryShow from "./components/category/CategoryShow";
 import CategoryIcon from '@mui/icons-material/CategoryRounded';
@@ -23,6 +22,7 @@ function App() {
         <Admin
             title="Admin"
             dataProvider={dataProvider}
+            theme={radiantLightTheme}
             disableTelemetry
         >
             <Resource name={'user'}
