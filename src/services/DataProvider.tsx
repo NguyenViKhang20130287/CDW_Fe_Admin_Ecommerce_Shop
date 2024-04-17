@@ -91,4 +91,16 @@ export const dataProvider: DataProvider = {
         console.log("Data Edit: ", json)
         return Promise.resolve({data: json});
     },
+    delete: async (resource: any, params: any) => {
+        const { json } = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+            method: 'DELETE',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }),
+        });
+        // console.log("Params: ", params)
+        console.log("Data delete:", json)
+        return { data: json };
+    },
 }
