@@ -134,7 +134,7 @@ export const dataProvider: DataProvider = {
         console.log(params)
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
-            body: JSON.stringify(params.data),
+            body: category ? JSON.stringify({...params.data, category}) : JSON.stringify(params.data),
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
