@@ -35,19 +35,6 @@ export const dataProvider: DataProvider = {
         } catch (err: any) {
         }
     },
-    // getOne: async (resource: any, params: any) =>
-    //     await httpClient(`${apiUrl}/${resource}/${params.id}`, {
-    //         method: 'GET',
-    //         headers: new Headers({
-    //             'Content-Type': 'application/json',
-    //             Accept: 'application/json',
-    //         }),
-    //         // credentials: 'include',
-    //     }).then(({json}) => {
-    //         return ({
-    //             data: json
-    //         })
-    //     }),
 
     getOne: async (resource: any, params: any) => {
         const { json } = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
@@ -57,7 +44,7 @@ export const dataProvider: DataProvider = {
                 Accept: 'application/json',
             }),
         });
-        console.log("Params: ", params)
+        // console.log("Params: ", params)
         console.log("Data:", json)
         return { data: json };
     },
@@ -91,7 +78,7 @@ export const dataProvider: DataProvider = {
     // }
     ,
     update: async (resource: any, params: any) => {
-        console.log(params)
+        console.log("params edit: ", params)
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
             body: JSON.stringify(params.data),
@@ -99,8 +86,9 @@ export const dataProvider: DataProvider = {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             }),
-            // credentials: 'include'
+            credentials: 'include'
         })
+        console.log("Data Edit: ", json)
         return Promise.resolve({data: json});
     },
 }

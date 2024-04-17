@@ -9,13 +9,14 @@ export const UserShow = () => {
                 <TextField label={'Họ và Tên'} source={'fullName'}/>
                 <TextField label={'Email'} source={'email'}/>
                 <TextField label={'Số Điện Thoại'} source={'email'}/>
-                <TextField label={'Quyền'} source={`user.authorities[0].authority`}/>
+                <TextField label={'Quyền'} source={`user.permission.name`}/>
                 <FunctionField
                     source="user.status"
                     label="Trạng thái"
-                    render={(record: { user: { status: boolean } }) => record.user.status ? "Hoạt động" : "Đã khóa"}
+                    render={(record: {
+                        user: { status: boolean } }) => record.user.status ? "Hoạt động" : "Đã khóa"}
                 />
-                    <ImageField source={"avatar"} title=" title" />
+                <ImageField source={"avatar"} title=" title"/>
             </SimpleShowLayout>
         </Show>
     )
