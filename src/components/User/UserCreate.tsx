@@ -1,5 +1,5 @@
 import React from "react";
-import {Create, SelectInput, SimpleForm, TextInput} from "react-admin";
+import {Create, ImageField, ImageInput, SelectInput, SimpleForm, TextInput} from "react-admin";
 import {Grid} from "@mui/material";
 
 export const UserCreate = (props: any) => {
@@ -24,6 +24,11 @@ export const UserCreate = (props: any) => {
                     {id: '1', name: 'ADMIN'},
                     {id: '2', name: 'CUSTOMER'}
                 ]}/>
+                <ImageInput name={""} source={"avatar.src"} accept={'image/*'} label={'Avatar'}
+                            placeholder={<p>Chọn ảnh</p>}
+                >
+                    <ImageField source={"src"} title=""/>
+                </ImageInput>
             </SimpleForm>
         </Create>
     )

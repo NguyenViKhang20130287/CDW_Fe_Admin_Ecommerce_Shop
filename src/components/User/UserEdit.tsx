@@ -16,8 +16,8 @@ export const UserEdit = (props: any) => {
     const {id} = useParams();
     const {record, save, isLoading} = useEditController({resource: 'user', id});
 
-    const [permissionId, setPermissionId] = useState(record.user.permission.id)
-    const dataProvider = useDataProvider()
+
+    const [permissionId, setPermissionId] = useState(record?.permission?.id || '');
 
     return (
         <Edit {...props} title={'Sửa Thông Tin Người Dùng'}>
@@ -25,20 +25,20 @@ export const UserEdit = (props: any) => {
                 <Grid>
                     <TextInput
                         name={""}
-                        source={"user.username"}
+                        source={"username"}
                         label={"Tên Đăng Nhập"}
                         disabled={true}
                     />
-                    <TextInput name={""} source={"email"} label={"Email"}/>
+                    <TextInput name={""} source={"userInformation.email"} label={"Email"}/>
                 </Grid>
                 <Grid>
-                    <TextInput name={""} source={"fullName"} label={"Họ và Tên"}/>
-                    <TextInput name={""} source={"phone"} label={"Số điện thoại"}/>
+                    <TextInput name={""} source={"userInformation.fullName"} label={"Họ và Tên"}/>
+                    <TextInput name={""} source={"userInformation.phone"} label={"Số điện thoại"}/>
                 </Grid>
 
-                <TextInput name={""} source={"address"} label={"Địa chỉ"}/>
-                <SelectInput name={"permission"} label={"Quyền"}
-                             source={`permission`}
+                <TextInput name={""} source={"userInformation.address"} label={"Địa chỉ"}/>
+                <SelectInput name={"permission.id"} label={"Quyền"}
+                             source={`permission.id`}
                              defaultValue={permissionId}
                              choices={[
                                  {id: '1', name: 'ADMIN'},
@@ -46,12 +46,13 @@ export const UserEdit = (props: any) => {
                              ]}
                 />
 
-                <ImageInput name={""} source={"avatar"} accept={'image/*'} label={'Avatar'}
+                <ImageField source={'userInformation.avatar'} label={'Ảnh đại diện'} title={'Ảnh đại diện'}/>
+                <ImageInput name={""} source={"avatar.src"} accept={'image/*'} label={'Ảnh đại diện mới'}
                             placeholder={<p>Chọn ảnh</p>}
                 >
                     <ImageField source={"src"} title=""/>
                 </ImageInput>
-                <BooleanInput label={"Trạng thái"} name={""} source={"user.status"}/>
+                <BooleanInput label={"Trạng thái"} name={""} source={"status"}/>
 
             </SimpleForm>
         </Edit>
