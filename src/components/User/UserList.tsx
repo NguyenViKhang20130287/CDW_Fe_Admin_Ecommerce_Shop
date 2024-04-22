@@ -35,14 +35,14 @@ const UserList = (props: any) => {
             <DatagridConfigurable
             rowClick={"show"}
             >
-                <TextField label={'ID'} source={'user.id'}/>
-                <TextField label={'Họ và Tên'} source={'fullName'}/>
+                <TextField label={'ID'} source={'id'}/>
+                <TextField label={'Họ và Tên'} source={'userInformation.fullName'}/>
                 <FunctionField
-                    source="user.status"
+                    source="status"
                     label="Trạng thái"
-                    render={(record: { user: { status: boolean } }) => record.user.status ? "Hoạt động" : "Đã khóa"}
+                    render={(record: {  status: boolean }) => record.status ? "Hoạt động" : "Đã khóa"}
                 />
-                <TextField label={'Quyền'} source={`user.permission.name`}/>
+                <TextField label={'Quyền'} source={`permission.name`}/>
                 <EditButton label={'Edit'} />
                 <DeleteButton label={'Delete'}/>
             </DatagridConfigurable>

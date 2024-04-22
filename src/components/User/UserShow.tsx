@@ -5,18 +5,19 @@ export const UserShow = () => {
     return (
         <Show>
             <SimpleShowLayout>
-                <TextField label={'ID'} source={'user.id'}/>
-                <TextField label={'Họ và Tên'} source={'fullName'}/>
-                <TextField label={'Email'} source={'email'}/>
-                <TextField label={'Số Điện Thoại'} source={'email'}/>
-                <TextField label={'Quyền'} source={`user.permission.name`}/>
+                <TextField label={'ID'} source={'id'}/>
+                <TextField label={'Họ và Tên'} source={'userInformation.fullName'}/>
+                <TextField label={'Email'} source={'userInformation.email'}/>
+                <TextField label={'Số Điện Thoại'} source={'userInformation.phone'}/>
+                <TextField label={'Địa chỉ'} source={'userInformation.address'}/>
+                <TextField label={'Quyền'} source={`permission.name`}/>
                 <FunctionField
-                    source="user.status"
+                    source="status"
                     label="Trạng thái"
                     render={(record: {
-                        user: { status: boolean } }) => record.user.status ? "Hoạt động" : "Đã khóa"}
+                        status: boolean }) => record.status ? "Hoạt động" : "Đã khóa"}
                 />
-                <ImageField source={"avatar"} title=" title"/>
+                <ImageField label={"Ảnh đại diện"} source={"userInformation.avatar"} title=" title"/>
             </SimpleShowLayout>
         </Show>
     )
