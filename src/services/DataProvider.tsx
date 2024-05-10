@@ -1,9 +1,11 @@
 import {DataProvider, fetchUtils} from 'react-admin'
+import {cloneFile} from "./config";
 
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
 
 export const dataProvider: DataProvider = {
+
 // @ts-ignore
     getList: async (resource: any, params: any) => {
         try {
@@ -35,19 +37,6 @@ export const dataProvider: DataProvider = {
         } catch (err: any) {
         }
     },
-    // getOne: async (resource: any, params: any) =>
-    //     await httpClient(`${apiUrl}/${resource}/${params.id}`, {
-    //         method: 'GET',
-    //         headers: new Headers({
-    //             'Content-Type': 'application/json',
-    //             Accept: 'application/json',
-    //         }),
-    //         // credentials: 'include',
-    //     }).then(({json}) => {
-    //         return ({
-    //             data: json
-    //         })
-    //     }),
 
     getOne: async (resource: any, params: any) => {
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
@@ -92,7 +81,41 @@ export const dataProvider: DataProvider = {
 
     // @ts-ignore
     create: async (resource: any, params: any) => {
-        console.log(params)
+        console.log("param create ", params)
+
+        if (resource === 'user') {
+            const formData = new FormData();
+            if (params.data.avatar && params.data.avatar.src && params.data.avatar.src.rawFile) {
+                console.log('ok')
+                const avt = cloneFile(params.data.avatar.src.rawFile, params.data.avatar.src.rawFile.name);
+                formData.append('avatar', avt);
+                console.log("Check file: ", avt instanceof File)
+                console.log('Avatar: ', avt)
+            }
+            formData.append('username', params.data.username || '');
+            formData.append('email', params.data.email || '');
+            formData.append('fullName', params.data.fullName || '');
+            formData.append('address', params.data.address || '');
+            formData.append('phone', params.data.phone || '');
+            formData.append('permission', params.data.permission || '');
+
+            console.log('Form Data: ', formData);
+
+            if (formData.entries().next().done) {
+                console.error('FormData is empty');
+                return Promise.reject('FormData is empty');
+            }
+
+            const {json} = await httpClient(`${apiUrl}/${resource}`, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+
+            window.location.href = `/#/${resource}`;
+            return Promise.resolve({data: json});
+        }
+
         // try {
         const {json} = await httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
@@ -120,6 +143,42 @@ export const dataProvider: DataProvider = {
     ,
     update: async (resource: any, params: any) => {
         let category = null;
+
+        if (resource === 'user') {
+            console.log('Params user: ', params)
+            const formData = new FormData();
+            if (typeof params.data.avatar.src !== 'undefined') {
+                const avt = cloneFile(params.data.avatar.src.rawFile,
+                    params.data.avatar.src.rawFile.name);
+                formData.append('avatar', avt);
+                console.log("Check file: ", avt instanceof File)
+                console.log('Avatar: ', avt)
+            }
+            formData.append('username', params.data.username || '');
+            formData.append('email', params.data.userInformation.email || '');
+            formData.append('fullName', params.data.userInformation.fullName || '');
+            formData.append('address', params.data.userInformation.address || '');
+            formData.append('phone', params.data.userInformation.phone || '');
+            formData.append('permission', params.data.permission.id || '');
+            formData.append('status', params.data.status || '');
+
+            console.log('Form Data: ', formData);
+
+            if (formData.entries().next().done) {
+                console.error('FormData is empty');
+                return Promise.reject('FormData is empty');
+            }
+
+            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                method: 'PUT',
+                body: formData,
+                credentials: 'include'
+            });
+
+            window.location.href = `/#/${resource}`;
+            return Promise.resolve({data: json});
+        }
+
         if (resource === 'product') {
             const {json} = await httpClient(`${apiUrl}/category/${params.data.category.id}`, {
                 method: 'GET',
@@ -143,6 +202,7 @@ export const dataProvider: DataProvider = {
         })
         return Promise.resolve({data: json});
     },
+
     delete: async (resource: any, params: any) => {
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'DELETE',
