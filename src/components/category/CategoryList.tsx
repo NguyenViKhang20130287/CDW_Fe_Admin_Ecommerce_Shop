@@ -55,8 +55,8 @@ export const CategoryList = () => {
                     <BooleanField source={'status'} label="Trạng thái"/>
                     <TextField source={'created_at'} label={'Ngày tạo'}/>
                     <>
-                        <ShowButton/>
-                        <EditButton/>
+                        <EditButton sx={{marginRight: "30px"}}/>
+                        <DeleteButton/>
                     </>
                 </DatagridConfigurable>
             )}

@@ -65,7 +65,7 @@ export const dataProvider: DataProvider = {
             perPage: perPage,
         };
         console.log(resource, params)
-        const {json} = await httpClient(`${apiUrl}/${resource}/category/${params.id}?${fetchUtils.queryParameters(query)}`, {
+        const {json} = await httpClient(`${apiUrl}/${resource}/${params.target}/${params.id}?${fetchUtils.queryParameters(query)}`, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ export const dataProvider: DataProvider = {
         // try {
         const {json} = await httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
-            body: JSON.stringify(params.data),
+            body: JSON.stringify(resource === "warehouse" ? params.data.ImportInvoiceRequest : params.data),
 
             headers: new Headers({
                 'Content-Type': 'application/json',
