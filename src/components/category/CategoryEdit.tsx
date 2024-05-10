@@ -38,7 +38,7 @@ export const CategoryEdit = (props: SelectArrayInputProps) => {
                 <Labeled label="Sản phẩm thuộc danh mục" fullWidth>
                     <ReferenceManyField
                         reference="product"
-                        target="category_id"
+                        target="category"
                         perPage={20}
                     >
                         <Datagrid

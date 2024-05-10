@@ -8,6 +8,7 @@ import CategoryIcon from '@mui/icons-material/CategoryRounded';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import PromotionIcon from '@mui/icons-material/LocalOffer';
+import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -21,6 +22,8 @@ import {PromotionList} from "./components/promotion/PromotionList";
 import {PromotionShow} from "./components/promotion/PromotionShow";
 import {PromotionCreate} from "./components/promotion/PromotionCreate";
 import {PromotionEdit} from "./components/promotion/PromotionEdit";
+import {ImportInvoiceCreate} from "./components/importInvoice/ImportInvoiceCreate";
+import ImportInvoiceList from "./components/importInvoice/ImportInvoiceList";
 
 function App() {
     return (
@@ -61,6 +64,13 @@ function App() {
                       icon={PromotionIcon}
                       show={PromotionShow}
                       options={{label: "Khuyến mãi"}}
+            />
+            <Resource name={'warehouse'}
+                      list={ImportInvoiceList}
+                      create={ImportInvoiceCreate}
+                      icon={WarehouseRoundedIcon}
+                      options={{label: "Nhập kho"}}
+
             />
         </Admin>
     );
