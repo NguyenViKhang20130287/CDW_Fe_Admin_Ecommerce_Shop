@@ -9,7 +9,7 @@ import {
     SelectColumnsButton,
     DatagridConfigurable,
     BooleanField,
-    FunctionField,
+    FunctionField, DeleteButton,
 } from 'react-admin';
 
 import {
@@ -64,7 +64,8 @@ export const PromotionList = () => {
                 <BooleanField source={'status'} label="Trạng thái"/>
                 <TextField source={'start_date'} label={"Ngày bắt đầu"}/>
                 <TextField source={'end_date'} label={"Ngày kết thúc"}/>
-                <EditButton/>
+                <EditButton sx={{marginRight: "30px"}}/>
+                <DeleteButton/>
             </DatagridConfigurable>
 
         </List>)
