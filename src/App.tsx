@@ -1,5 +1,5 @@
 import React from 'react';
-import {Admin, radiantLightTheme, Resource} from "react-admin";
+import {Admin, Login, radiantLightTheme, Resource} from "react-admin";
 import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
 import CategoryList from "./components/category/CategoryList";
@@ -22,6 +22,7 @@ import {PromotionList} from "./components/promotion/PromotionList";
 import {PromotionShow} from "./components/promotion/PromotionShow";
 import {PromotionCreate} from "./components/promotion/PromotionCreate";
 import {PromotionEdit} from "./components/promotion/PromotionEdit";
+import {authProvider} from "./services/AuthProvider";
 import {ImportInvoiceCreate} from "./components/importInvoice/ImportInvoiceCreate";
 import ImportInvoiceList from "./components/importInvoice/ImportInvoiceList";
 
@@ -32,7 +33,8 @@ function App() {
             dataProvider={dataProvider}
             theme={radiantLightTheme}
             disableTelemetry
-            // authProvider={authProvider}
+            authProvider={authProvider}
+            loginPage={Login}
         >
             <Resource name={'user'}
                       list={UserList}
