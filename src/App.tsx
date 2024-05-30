@@ -20,11 +20,11 @@ import {UserShow} from "./components/User/UserShow";
 import {UserEdit} from './components/User/UserEdit'
 import {PromotionList} from "./components/promotion/PromotionList";
 import {PromotionShow} from "./components/promotion/PromotionShow";
-import {PromotionCreate} from "./components/promotion/PromotionCreate";
-import {PromotionEdit} from "./components/promotion/PromotionEdit";
 import {authProvider} from "./services/AuthProvider";
 import {ImportInvoiceCreate} from "./components/importInvoice/ImportInvoiceCreate";
 import ImportInvoiceList from "./components/importInvoice/ImportInvoiceList";
+import PromotionCreate from "./components/promotion/PromotionCreate";
+import PromotionEdit from "./components/promotion/PromotionEdit";
 
 function App() {
     return (

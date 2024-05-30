@@ -8,7 +8,7 @@ import {
     AUTH_CHECK
 }
     from 'react-admin'
-import simpleRestProvider from 'ra-data-simple-rest'
+// import simpleRestProvider from 'ra-data-simple-rest'
 import axios from "axios";
 import {json} from "node:stream/consumers";
 
@@ -32,7 +32,7 @@ const httpClient = async (url: string, options: any = {}): Promise<any> => {
     }).then((response: { data: any; }) => response.data);
 };
 
-const dataProvider = simpleRestProvider('http://localhost:3000', httpClient)
+// const dataProvider = simpleRestProvider('http://localhost:3000', httpClient)
 
 
 export const authProvider: AuthProvider = {

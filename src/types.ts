@@ -56,3 +56,10 @@ export interface Promotion extends RaRecord {
     updated_at: string,
     updated_by: User
 }
+
+export interface ColorSize extends RaRecord {
+    id: number,
+    color: Color,
+    size: Size,
+    quantity: number
+}

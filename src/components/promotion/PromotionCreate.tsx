@@ -1,39 +1,88 @@
 import {
-    SimpleForm,
-    TextInput,
-    DateField,
-    required, useGetList, SelectArrayInputProps, BooleanInput, Create, DateInput
-} from 'react-admin';
-import React, {useEffect, useState} from "react";
-import {Promotion} from "../../types";
+    ArrayInput, AutocompleteInput, Create, DateInput,
+     NullableBooleanInput, NumberInput, ReferenceInput,
+    required, SimpleFormIterator, TabbedForm,
+    TextInput, useEditContext, useGetList,
+} from "react-admin";
+import {Grid, InputAdornment} from "@mui/material";
+import React from "react";
+import {Product} from "../../types";
 
-const PromotionTitle = () => {
-    return <span>Tạo khuyến mãi</span>;
-};
-export const PromotionCreate = (props: SelectArrayInputProps) => {
-    const [promotion, setPromotion] = useState<Promotion[]>([]);
-    const {data}: any = useGetList<Promotion>('promotion', {
+const PromotionCreate = () => {
+
+    const {record, isLoading}: any = useEditContext();
+    console.log(record);
+
+    const {data} = useGetList<Product>('product', {
         pagination: {page: 1, perPage: 100},
         sort: {field: 'name', order: 'ASC'},
     });
-
-    useEffect(() => {
-        if (data) {
-            setPromotion(data);
-        }
-    }, [data]);
+    console.log(data);
+    if (isLoading) return null;
     return (
-        <Create title={<PromotionTitle/>}>
-            <SimpleForm>
-                <TextInput source="name" label={'Tên khuyến mãi'} validate={req}/>
-                <TextInput source="description" label={'Mô tả khuyến mãi'} validate={req}/>
-                <TextInput source="discount_rate" label={'Tỉ lệ khuyến mãi'} validate={req}/>
-                <DateInput source="start_date" label={'Ngày bắt đầu'} validate={req}/>
-                <DateInput source="end_date" label={'Ngày kết thúc'} validate={req}/>
-                <BooleanInput source="status" label="Trạng thái" defaultValue={true}/>
-            </SimpleForm>
+        <Create>
+            <TabbedForm warnWhenUnsavedChanges>
+                <TabbedForm.Tab
+                    label="Thông tin khuyến mãi"
+                    sx={{maxWidth: '40em'}}
+                >
+                    <Grid container columnSpacing={2}>
+                        <Grid item xs={12} sm={12}>
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextInput source="name" label="Tên khuyến mãi" validate={required()} fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12}>
+                            <TextInput source="description" label="Mô tả" fullWidth multiline/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <DateInput source="startDate" label="Ngày bắt đầu" fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <DateInput source="endDate" label="Ngày kết thúc" fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <NumberInput
+                                source="discount_rate"
+                                label="Giảm giá"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="start">%</InputAdornment>
+                                    ),
+                                }}
+                                min={0}
+                                max={100}
+                                defaultValue={0}
+                                validate={required()}
+                                fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <NullableBooleanInput source="status" label="Trạng thái" defaultValue={false} fullWidth/>
+                        </Grid>
+                    </Grid>
+                </TabbedForm.Tab>
+                <TabbedForm.Tab
+                    label="Sản phẩm khuyến mãi"
+                    path="products"
+                    sx={{maxWidth: '40em'}}
+                >
+                    <ArrayInput source={`product`} label={`Sản phẩm`}>
+                        <SimpleFormIterator inline>
+                            <ReferenceInput source="id" reference="product" label="Sản phẩm" fullWidth>
+                                <AutocompleteInput optionText="name" sx={{width: '40em'}}/>
+                            </ReferenceInput>
+                        </SimpleFormIterator>
+                    </ArrayInput>
+                </TabbedForm.Tab>
+
+            </TabbedForm>
         </Create>
     )
 };
 
-const req = [required()];
+export default PromotionCreate;

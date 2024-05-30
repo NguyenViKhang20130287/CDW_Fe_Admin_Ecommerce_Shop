@@ -1,8 +1,20 @@
 import {DataProvider, fetchUtils} from 'react-admin'
 import {cloneFile} from "./config";
+import {imgProvider} from "../imgProvider/imageUrl";
 
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
+
+async function getBase64(file: any) {
+    return new Promise((resolve, reject) => {
+        const reader: any = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+            resolve(reader.result.split(',')[1])
+        }
+        reader.onerror = reject
+    })
+}
 
 export const dataProvider: DataProvider = {
 
@@ -25,7 +37,7 @@ export const dataProvider: DataProvider = {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                 }),
-                // credentials: 'include',
+                credentials: 'include',
             })
             console.log("Json: ", json)
             console.log("Content: ", json.content)
@@ -50,7 +62,25 @@ export const dataProvider: DataProvider = {
         console.log("Data:", json)
         return {data: json};
     },
-
+    getMany: async (resource: any, params: any) => {
+        const ids = params.ids.map((cate: object | any) => typeof cate === "object" ? cate.id : cate)
+        const query = {
+            ids: JSON.stringify({ids: ids}),
+        };
+        console.log("Params: ", query)
+        let result: never[] = [];
+        await httpClient(`${apiUrl}/${resource}/ids?${fetchUtils.queryParameters(query)}`, {
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }),
+            credentials: 'include',
+        }).then((response: any) => {
+            result = response.data;
+            console.log("Result: ", result)
+        })
+        return Promise.resolve({data: result})
+    },
     getManyReference: async (resource: any, params: any) => {
         const {page, perPage} = params.pagination;
         const {field, order} = params.sort;
@@ -82,7 +112,7 @@ export const dataProvider: DataProvider = {
     // @ts-ignore
     create: async (resource: any, params: any) => {
         console.log("param create ", params)
-
+        // try {
         if (resource === 'user') {
             const formData = new FormData();
             if (params.data.avatar && params.data.avatar.src && params.data.avatar.src.rawFile) {
@@ -105,7 +135,7 @@ export const dataProvider: DataProvider = {
                 console.error('FormData is empty');
                 return Promise.reject('FormData is empty');
             }
-
+            // console.log('Params: ', params)
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
                 body: formData,
@@ -115,22 +145,74 @@ export const dataProvider: DataProvider = {
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
         }
+        let thumbnail = null;
+        let imageProducts = [];
+        if (resource === 'product') {
+            if (params.data.thumbnail !== undefined && params.data.thumbnail !== null) {
+                let selectedImg = null;
+                await getBase64(params.data.thumbnail.rawFile)
+                    .then(res => {
+                        selectedImg = res;
+                    })
+                    .catch(err => console.log(err))
+                thumbnail = await imgProvider(selectedImg);
+            }
+            if (params.data.imageProducts !== undefined && params.data.imageProducts !== null) {
+                for (const item of params.data.imageProducts) {
+                    let selectedImg = null;
+                    await getBase64(item.rawFile)
+                        .then(res => {
+                            selectedImg = res;
+                        })
+                        .catch(err => console.log(err))
+                    imageProducts.push({
+                        product: null,
+                        link: await imgProvider(selectedImg),
+                    });
+                }
+            }
+            params.data.colorSizes = await Promise.all(params.data.colorSizes.map(async (item: any) => {
+                const {data: color} = await dataProvider.getOne('color', {id: item.color});
+                const {data: size} = await dataProvider.getOne('size', {id: item.size});
+                return {
+                    ...item,
+                    color,
+                    size,
+                };
+            }));
+            const {data: category} = await dataProvider.getOne('category', {id: params.data.category});
+            params.data.category = category;
+            // params.data.thumbnail = thumbnail;
+            // params.data.imageProducts = imageProducts;
+            params.data.createdBy = null;
+            params.data.updatedBy = null;
+            const {json} = await httpClient(`${apiUrl}/${resource}`, {
+                method: 'POST',
+                body: JSON.stringify({...params.data, category: category, thumbnail: thumbnail, imageProducts: imageProducts}),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+                credentials: 'include'
+            })
 
-        // try {
-        const {json} = await httpClient(`${apiUrl}/${resource}`, {
-            method: 'POST',
-            body: JSON.stringify(resource === "warehouse" ? params.data.ImportInvoiceRequest : params.data),
+            window.location.href = `/#/${resource}`
+            return Promise.resolve({data: json});
+        } else {
+            const {json} = await httpClient(`${apiUrl}/${resource}`, {
+                method: 'POST',
+                body: JSON.stringify(resource === "warehouse" ? params.data.ImportInvoiceRequest : params.data),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+                credentials: 'include'
+            })
+            // switch to window /#/resource
+            window.location.href = `/#/${resource}`
+            return Promise.resolve({data: json});
+        }
 
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }),
-            // credentials: 'include'
-        })
-        // switch to window /#/resource
-        window.location.href = `/#/${resource}`
-        return Promise.resolve({data: json});
-        // }
     }
     // catch (error: any) {
     //     if (error.status === 401) {
@@ -142,8 +224,11 @@ export const dataProvider: DataProvider = {
     // }
     ,
     update: async (resource: any, params: any) => {
+        let thumbnail = null;
+        let imageProducts = [];
+        console.log(" updated params: ", params)
         let category = null;
-
+        let colorSizes = null;
         if (resource === 'user') {
             console.log('Params user: ', params)
             const formData = new FormData();
@@ -180,20 +265,75 @@ export const dataProvider: DataProvider = {
         }
 
         if (resource === 'product') {
-            const {json} = await httpClient(`${apiUrl}/category/${params.data.category.id}`, {
+            if (params.data.thumbnail_new !== undefined && params.data.thumbnail_new !== null) {
+                let selectedImg = null;
+                await getBase64(params.data.thumbnail_new.rawFile)
+                    .then(res => {
+                        selectedImg = res;
+                    })
+                    .catch(err => console.log(err))
+                thumbnail = await imgProvider(selectedImg);
+            }
+            if (params.data.imageProducts_new !== undefined && params.data.imageProducts_new !== null) {
+                for (const item of params.data.imageProducts_new) {
+                    let selectedImg = null;
+                    await getBase64(item.rawFile)
+                        .then(res => {
+                            selectedImg = res;
+                        })
+                        .catch(err => console.log(err))
+                    imageProducts.push({
+                        product: null,
+                        link: await imgProvider(selectedImg),
+                    });
+                }
+            }
+            const {json: categoryJson} = await httpClient(`${apiUrl}/category/${params.data.category.id}`, {
                 method: 'GET',
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                 }),
                 credentials: 'include'
-            })
-            category = json;
+            });
+            category = categoryJson;
+            colorSizes = await Promise.all(params.data.colorSizes.map(async (item: any) => {
+                const {data: color} = await dataProvider.getOne('color', {id: item.color.id});
+                const {data: size} = await dataProvider.getOne('size', {id: item.size.id});
+                return {
+                    ...item,
+                    color,
+                    size,
+                };
+            }));
+            // params.data.thumbnail = thumbnail;
+            // params.data.imageProducts = imageProducts;
+
+            console.log(" updated params: ", params);
+            console.log(" updated category: ", category);
+            console.log(" updated colorSizes: ", colorSizes);
+            console.log("updated thumbnail: ", thumbnail);
+            console.log("updated imageProducts: ", imageProducts);
+
+            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    ...params.data, category, colorSizes, thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail,
+                    imageProducts: imageProducts.length > 0 ? imageProducts : params.data.imageProducts
+                }),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+                credentials: 'include'
+            });
+            window.location.href = `/#/${resource}`;
+            return Promise.resolve({data: json});
         }
-        console.log(params)
+        console.log(" updated params: ", params)
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
-            body: category ? JSON.stringify({...params.data, category}) : JSON.stringify(params.data),
+            body: category ? JSON.stringify({...params.data, category, colorSizes}) : JSON.stringify(params.data),
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -202,6 +342,7 @@ export const dataProvider: DataProvider = {
         })
         return Promise.resolve({data: json});
     },
+    updateMany: (resource: any, params: any) => Promise.resolve({data: []}),
 
     delete: async (resource: any, params: any) => {
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {

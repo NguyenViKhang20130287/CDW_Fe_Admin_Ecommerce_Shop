@@ -1,49 +1,104 @@
 import {
-    Edit,
-    SimpleForm,
-    TextInput,
-    required,
-    useGetList,
-    SelectArrayInputProps,
-    BooleanInput,
-    DateField,
-    DateInput,
-    useRecordContext,
-    NumberInput,
-    maxValue, minValue
-} from 'react-admin';
-import React, {useEffect, useState} from "react";
-import { Promotion} from "../../types";
+    ArrayInput, AutocompleteInput,
+    BooleanInput, DateInput,
+    Edit, ImageField, NullableBooleanInput, NumberInput, ReferenceInput,
+    required, SimpleFormIterator, TabbedForm,
+    TextInput, useEditContext, useGetList,
+} from "react-admin";
+import {Grid, InputAdornment, Typography} from "@mui/material";
+import React from "react";
+import {Category, Product} from "../../types";
 
+const PromotionEdit = () => {
 
-const PromotionTitle = () => {
-    const record = useRecordContext<Promotion>();
-    return record ? <span>{record.name}</span> : null;
-};
-export const PromotionEdit = (props: SelectArrayInputProps) => {
-    const [promotion, setPromotion] = useState<Promotion[]>([]);
-    const {data}: any = useGetList<Promotion>('promotion', {
+    const {record, isLoading}: any = useEditContext();
+    console.log(record);
+
+    const {data} = useGetList<Product>('product', {
         pagination: {page: 1, perPage: 100},
         sort: {field: 'name', order: 'ASC'},
     });
-
-    useEffect(() => {
-        if (data) {
-            setPromotion(data);
-        }
-    }, [data]);
+    console.log(data);
+    if (isLoading) return null;
     return (
-        <Edit title={<PromotionTitle/>}>
-            <SimpleForm>
-                <TextInput source="name" label={'Tên khuyến mãi'} validate={req}/>
-                <TextInput source="description" label={'Mô tả khuyến mãi'} validate={req}/>
-                <NumberInput source="discount_rate" label={'Tỉ lệ khuyến mãi'} validate={validateDiscountRate}/>
-                <DateInput source="start_date" label={'Ngày bắt đầu'} validate={req}/>
-                <DateInput source="end_date" label={'Ngày kết thúc'} validate={req}/>
-                <BooleanInput source="status" label="Trạng thái" defaultValue={true}/>
-            </SimpleForm>
+        <Edit>
+            <TabbedForm warnWhenUnsavedChanges>
+                <TabbedForm.Tab
+                    label="Thông tin khuyến mãi"
+                    sx={{maxWidth: '40em'}}
+                >
+                    <Grid container columnSpacing={2}>
+                        <Grid item xs={12} sm={12}>
+                            <TextInput source="name" label="Tên khuyến mãi" validate={required()} fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12}>
+                            <TextInput source="description" label="Mô tả" fullWidth multiline/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <DateInput source="startDate" label="Ngày bắt đầu" fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <DateInput source="endDate" label="Ngày kết thúc" fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <NumberInput
+                                source="discount"
+                                label="Giảm giá"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="start">%</InputAdornment>
+                                    ),
+                                }}
+                                min={0}
+                                max={100}
+                                defaultValue={0}
+                                validate={required()}
+                                fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <NullableBooleanInput source="status" label="Trạng thái" defaultValue={false} fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <DateInput source="createdAt" label="Ngày tạo" disabled fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextInput source="createdBy.username" label="Người tạo" disabled fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <DateInput source="updatedAt" label="Ngày cập nhật" disabled fullWidth/>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextInput source="updatedBy.username" label="Người cập nhật" disabled fullWidth/>
+                        </Grid>
+
+                    </Grid>
+                </TabbedForm.Tab>
+                <TabbedForm.Tab
+                    label="Sản phẩm khuyến mãi"
+                    path="products"
+                    sx={{maxWidth: '40em'}}
+                >
+                    <ArrayInput source={`products`} label={`Sản phẩm`}>
+                        <SimpleFormIterator inline>
+                            <ReferenceInput source="id" reference="product" label="Sản phẩm" fullWidth>
+                                <AutocompleteInput optionText="name" sx={{width: '40em'}}/>
+                            </ReferenceInput>
+                        </SimpleFormIterator>
+                    </ArrayInput>
+                </TabbedForm.Tab>
+
+            </TabbedForm>
         </Edit>
     )
 };
-const req = [required()];
-const validateDiscountRate = [required(), minValue(0), maxValue(100)];
+
+export default PromotionEdit;
