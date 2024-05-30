@@ -66,7 +66,7 @@ export const ProductList = () => {
                     }}
                     label="Giá"
                 />
-                <EditButton/>
+                <EditButton />
             </DatagridConfigurable>
 
         </List>)

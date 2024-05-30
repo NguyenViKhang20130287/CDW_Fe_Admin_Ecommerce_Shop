@@ -62,8 +62,8 @@ export const PromotionList = () => {
                     render={(record : any) => `${record.discount_rate}%`}
                 />
                 <BooleanField source={'status'} label="Trạng thái"/>
-                <TextField source={'start_date'} label={"Ngày bắt đầu"}/>
-                <TextField source={'end_date'} label={"Ngày kết thúc"}/>
+                <TextField source={'startDate'} label={"Ngày bắt đầu"}/>
+                <TextField source={'endDate'} label={"Ngày kết thúc"}/>
                 <EditButton sx={{marginRight: "30px"}}/>
                 <DeleteButton/>
             </DatagridConfigurable>

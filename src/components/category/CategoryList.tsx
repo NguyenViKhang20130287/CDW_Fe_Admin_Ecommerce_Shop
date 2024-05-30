@@ -53,7 +53,7 @@ export const CategoryList = () => {
                     <TextField source={'id'}/>
                     <TextField source={'name'} label={'Tên'}/>
                     <BooleanField source={'status'} label="Trạng thái"/>
-                    <TextField source={'created_at'} label={'Ngày tạo'}/>
+                    <TextField source={'createdAt'} label={'Ngày tạo'}/>
                     <>
                         <EditButton sx={{marginRight: "30px"}}/>
                         <DeleteButton/>
