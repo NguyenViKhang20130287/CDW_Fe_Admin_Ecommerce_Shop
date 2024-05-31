@@ -71,7 +71,7 @@ const PromotionCreate = () => {
                     path="products"
                     sx={{maxWidth: '40em'}}
                 >
-                    <ArrayInput source={`product`} label={`Sản phẩm`}>
+                    <ArrayInput source={`products`} label={`Sản phẩm`}>
                         <SimpleFormIterator inline>
                             <ReferenceInput source="id" reference="product" label="Sản phẩm" fullWidth>
                                 <AutocompleteInput optionText="name" sx={{width: '40em'}}/>

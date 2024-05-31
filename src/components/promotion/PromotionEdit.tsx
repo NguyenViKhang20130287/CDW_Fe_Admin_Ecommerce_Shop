@@ -46,7 +46,7 @@ const PromotionEdit = () => {
 
                         <Grid item xs={12} sm={6}>
                             <NumberInput
-                                source="discount"
+                                source="discount_rate"
                                 label="Giảm giá"
                                 InputProps={{
                                     endAdornment: (

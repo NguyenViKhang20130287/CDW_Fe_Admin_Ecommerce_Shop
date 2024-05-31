@@ -67,7 +67,6 @@ export const dataProvider: DataProvider = {
         const query = {
             ids: JSON.stringify({ids: ids}),
         };
-        console.log("Params: ", query)
         let result: never[] = [];
         await httpClient(`${apiUrl}/${resource}/ids?${fetchUtils.queryParameters(query)}`, {
             headers: new Headers({
@@ -76,8 +75,7 @@ export const dataProvider: DataProvider = {
             }),
             credentials: 'include',
         }).then((response: any) => {
-            result = response.data;
-            console.log("Result: ", result)
+            result = Array.isArray(response.data) ? response.data : [response.data];
         })
         return Promise.resolve({data: result})
     },
