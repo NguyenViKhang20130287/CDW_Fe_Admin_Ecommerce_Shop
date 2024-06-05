@@ -55,7 +55,7 @@ export const PromotionList = () => {
                 }
             >
                 <TextField source="name" label="Tên SP"/>
-                {/*<TextField sx={{m: "auto"}} source="description" label="Mô tả"/>*/}
+                <TextField sx={{m: "auto"}} source="description" label="Mô tả"/>
                 <FunctionField
                     source={'discount_rate'}
                     label="Tỉ lệ"

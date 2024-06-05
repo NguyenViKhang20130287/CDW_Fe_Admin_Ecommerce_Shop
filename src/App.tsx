@@ -9,6 +9,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import PromotionIcon from '@mui/icons-material/LocalOffer';
 import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
+import BlogIcon from '@mui/icons-material/Book';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -25,6 +26,10 @@ import {ImportInvoiceCreate} from "./components/importInvoice/ImportInvoiceCreat
 import ImportInvoiceList from "./components/importInvoice/ImportInvoiceList";
 import PromotionCreate from "./components/promotion/PromotionCreate";
 import PromotionEdit from "./components/promotion/PromotionEdit";
+import BlogList from "./components/blogs/BlogList";
+import BlogShow from "./components/blogs/BlogShow";
+import {BlogCreate} from "./components/blogs/BlogCreate";
+import {BlogEdit} from "./components/blogs/BlogEdit";
 
 function App() {
     return (
@@ -74,6 +79,13 @@ function App() {
                       options={{label: "Nhập kho"}}
 
             />
+            <Resource name={'blog'} list={BlogList}
+                      show={BlogShow}
+                      create={BlogCreate}
+                      edit={BlogEdit}
+                      icon={BlogIcon}
+                      options={{label: "Blog"}}>
+            </Resource>
         </Admin>
     );
 }

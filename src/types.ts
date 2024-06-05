@@ -1,4 +1,5 @@
 import {RaRecord} from 'react-admin';
+
 export interface Category extends RaRecord {
     id: number,
     name: string,
@@ -62,4 +63,17 @@ export interface ColorSize extends RaRecord {
     color: Color,
     size: Size,
     quantity: number
+}
+
+export interface Blog extends RaRecord {
+    id: number,
+    title: string,
+    description: string,
+    content: string,
+    thumbnail: string,
+    status: boolean,
+    created_at: string,
+    created_by: User,
+    updated_at: string,
+    updated_by: User
 }
