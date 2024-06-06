@@ -7,19 +7,19 @@ import {
     ExportButton,
     FilterButton,
     List,
-    NumberField, NumberInput,
+    NumberField,
     Pagination,
     SelectColumnsButton,
-    SimpleForm, SimpleFormIterator,
     TextField,
     TextInput,
     TopToolbar
 } from 'react-admin';
-import {Stack} from '@mui/material';
+import ImportButton from "./ImportButton";
 
 const ListActions = () => (
     <TopToolbar>
-        <CreateButton/>
+        <CreateButton label={'Nhập kho'}/>
+        <ImportButton/>
         <SelectColumnsButton/>
         <FilterButton/>
         <ExportButton label={"Xuất File"}/>

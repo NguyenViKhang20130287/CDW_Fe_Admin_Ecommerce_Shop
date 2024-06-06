@@ -186,7 +186,35 @@ export const dataProvider: DataProvider = {
             params.data.updatedBy = null;
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
-                body: JSON.stringify({...params.data, category: category, thumbnail: thumbnail, imageProducts: imageProducts}),
+                body: JSON.stringify({
+                    ...params.data,
+                    category: category,
+                    thumbnail: thumbnail,
+                    imageProducts: imageProducts
+                }),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+                credentials: 'include'
+            })
+
+            window.location.href = `/#/${resource}`
+            return Promise.resolve({data: json});
+        }
+        if (resource === "blog") {
+            if (params.data.thumbnail !== undefined && params.data.thumbnail !== null) {
+                let selectedImg = null;
+                await getBase64(params.data.thumbnail.rawFile)
+                    .then(res => {
+                        selectedImg = res;
+                    })
+                    .catch(err => console.log(err))
+                thumbnail = await imgProvider(selectedImg);
+            }
+            const {json} = await httpClient(`${apiUrl}/${resource}`, {
+                method: 'POST',
+                body: JSON.stringify({...params.data, thumbnail: thumbnail}),
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -304,19 +332,14 @@ export const dataProvider: DataProvider = {
                     size,
                 };
             }));
-            // params.data.thumbnail = thumbnail;
-            // params.data.imageProducts = imageProducts;
-
-            console.log(" updated params: ", params);
-            console.log(" updated category: ", category);
-            console.log(" updated colorSizes: ", colorSizes);
-            console.log("updated thumbnail: ", thumbnail);
-            console.log("updated imageProducts: ", imageProducts);
 
             const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    ...params.data, category, colorSizes, thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail,
+                    ...params.data,
+                    category,
+                    colorSizes,
+                    thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail,
                     imageProducts: imageProducts.length > 0 ? imageProducts : params.data.imageProducts
                 }),
                 headers: new Headers({
@@ -325,6 +348,28 @@ export const dataProvider: DataProvider = {
                 }),
                 credentials: 'include'
             });
+            window.location.href = `/#/${resource}`;
+            return Promise.resolve({data: json});
+        }
+        if (resource === 'blog') {
+            if (params.data.thumbnail_new !== undefined && params.data.thumbnail_new !== null) {
+                let selectedImg = null;
+                await getBase64(params.data.thumbnail_new.rawFile)
+                    .then(res => {
+                        selectedImg = res;
+                    })
+                    .catch(err => console.log(err))
+                thumbnail = await imgProvider(selectedImg);
+            }
+            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({...params.data,  thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail}),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+                credentials: 'include'
+            })
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
         }

@@ -15,7 +15,7 @@ import ThumbnailField from "../product/ThumbnailField";
 
 
 const CategoryTitle = () => {
-    const record = useRecordContext<Promotion>();
+    const record = useRecordContext<Category>();
     return record ? <span>{record.name}</span> : null;
 };
 export const CategoryEdit = (props: SelectArrayInputProps) => {
