@@ -14,13 +14,12 @@ import {
     TextInput,
     TopToolbar
 } from 'react-admin';
-import {Stack} from '@mui/material';
-// import ImportButton from "./ImportButton";
+import ImportButton from "./ImportButton";
 
 const ListActions = () => (
     <TopToolbar>
         <CreateButton label={'Nhập kho'}/>
-        {/*<ImportButton/>*/}
+        <ImportButton/>
         <SelectColumnsButton/>
         <FilterButton/>
         <ExportButton label={"Xuất File"}/>
