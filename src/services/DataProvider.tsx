@@ -165,6 +165,10 @@ export const dataProvider: DataProvider = {
                 window.location.href = `/#/${resource}`;
                 return Promise.resolve({data: json});
             }
+
+            if (resource === 'order'){
+
+            }
         } catch (e) {
             console.log('err', e)
         }
@@ -406,6 +410,7 @@ export const dataProvider: DataProvider = {
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
         }
+        //
         console.log(" updated params: ", params)
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
