@@ -54,24 +54,22 @@ export const authProvider: AuthProvider = {
     getPermissions(params: any): Promise<any> {
         return Promise.resolve(undefined);
     },
-    login: ({username, password}: { username: string, password: string }) => {
-        return axios.post('http://localhost:8080/api/v1/auth/login', {username, password})
-            .then(response => {
-                const res = response.data.body
-                const token = res.token
-                const permission = res.permission
-                // console.log('Token: ', res.token)
-                // console.log('Permission: ', res.permission)
-                if (!token) {
-                    throw new Error('Token not found in response')
-                }
-                if (permission === 'ADMIN') {
-                    localStorage.setItem('auth', JSON.stringify({token}))
-                } else throw new Error('The account is not authorized to log in.')
-            })
-            .catch(err => {
-                throw new Error('Network error')
-            })
+    login: async ({username, password}: { username: string, password: string }) => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/v1/auth/login', {username, password});
+            const res = response.data.body;
+            const token = res.token;
+            const permission = res.permission;
+            if (!token) {
+                throw new Error('Phiên đăng nhập đã hết hạn !');
+            }
+            if (permission === 'ADMIN') {
+                localStorage.setItem('auth', JSON.stringify({token}));
+            } else
+                throw new Error('Tài khoản không có quyền hạng để đăng nhập vào hệ thống !.');
+        } catch (err) {
+            throw new Error('Username hoặc mật khẩu không đúng !');
+        }
     },
     logout(params: any): Promise<void | false | string> {
         localStorage.removeItem('auth');

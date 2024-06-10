@@ -10,6 +10,7 @@ import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import PromotionIcon from '@mui/icons-material/LocalOffer';
 import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
 import BlogIcon from '@mui/icons-material/Book';
+import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
@@ -31,6 +32,8 @@ import BlogList from "./components/blogs/BlogList";
 import BlogShow from "./components/blogs/BlogShow";
 import {BlogCreate} from "./components/blogs/BlogCreate";
 import {BlogEdit} from "./components/blogs/BlogEdit";
+import OrderList from "./components/Order/OrderList";
+import {OrderShow} from "./components/Order/OrderShow";
 import {ReviewList} from "./components/reviews/ReviewList";
 
 function App() {
@@ -73,6 +76,12 @@ function App() {
                       icon={PromotionIcon}
                       show={PromotionShow}
                       options={{label: "Khuyến mãi"}}
+            />
+            <Resource name={'order'}
+                      list={OrderList}
+                      options={{label: "Đơn hàng"}}
+                      icon={ReceiptRoundedIcon}
+                      show={OrderShow}
             />
             <Resource name={'warehouse'}
                       list={ImportInvoiceList}
