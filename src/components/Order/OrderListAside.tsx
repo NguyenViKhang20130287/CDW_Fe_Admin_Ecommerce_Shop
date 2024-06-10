@@ -24,6 +24,10 @@ export const OrderListAside = (props:any) =>{
                     <FilterListItem label={'Đã xác nhận'} value={{deliveryStatus: 'Confirmed'}}/>
                     <FilterListItem label={'Đã thanh toán'} value={{deliveryStatus: 'Paid'}}/>
                 </FilterList>
+                <FilterList label={'Phương Thức Thanh Toán'} icon={<PaidIcon/>}>
+                    <FilterListItem label={'COD'} value={{paymentMethod: 'COD'}}/>
+                    <FilterListItem label={'VNPAY'} value={{paymentMethod: 'VNPAY'}}/>
+                </FilterList>
             </CardContent>
         </Card>
     )
