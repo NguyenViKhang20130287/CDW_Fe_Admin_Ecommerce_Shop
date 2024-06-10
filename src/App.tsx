@@ -11,6 +11,7 @@ import PromotionIcon from '@mui/icons-material/LocalOffer';
 import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
 import BlogIcon from '@mui/icons-material/Book';
 import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
+import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -33,6 +34,7 @@ import {BlogCreate} from "./components/blogs/BlogCreate";
 import {BlogEdit} from "./components/blogs/BlogEdit";
 import OrderList from "./components/Order/OrderList";
 import {OrderShow} from "./components/Order/OrderShow";
+import {ReviewList} from "./components/reviews/ReviewList";
 
 function App() {
     return (
@@ -95,6 +97,11 @@ function App() {
                       icon={BlogIcon}
                       options={{label: "Blog"}}>
             </Resource>
+            <Resource name={'review'}
+                      list={ReviewList}
+                      icon={RateReviewRoundedIcon}
+                        options={{label: "Đánh giá"}}
+            ></Resource>
         </Admin>
     );
 }
