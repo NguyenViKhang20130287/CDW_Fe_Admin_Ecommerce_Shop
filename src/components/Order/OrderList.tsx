@@ -10,6 +10,7 @@ import {
 import React from "react";
 import {OrderListAside} from "./OrderListAside";
 import {Button} from "@mui/material";
+import {addLog} from "../../services/DataProvider";
 
 const ApproveButton: React.FC<{ record: any }> = ({record}) => {
     const dataProvider = useDataProvider();
@@ -19,8 +20,9 @@ const ApproveButton: React.FC<{ record: any }> = ({record}) => {
     const handleClick = () => {
         // @ts-ignore
         dataProvider.update('order/confirm', {id: record.id, data: undefined})
-            .then(() => {
+            .then(async () => {
                 notify('Order approved successfully', {type: 'info'});
+                await addLog(`Xác nhận đơn hàng có id ${record.id}`)
                 refresh()
             })
             .catch((error) => {
@@ -70,6 +72,7 @@ const OrderList = (props: any) => {
                         <ApproveButton record={record}/>
                     )}
                 />
+                <ShowButton label={'Xem'}/>
                 <DeleteButton label={'Xóa'}/>
             </DatagridConfigurable>
         </List>

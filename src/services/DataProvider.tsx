@@ -1,9 +1,26 @@
 import {DataProvider, fetchUtils} from 'react-admin'
 import {cloneFile} from "./config";
 import {imgProvider} from "../imgProvider/imageUrl";
+import axios from "axios";
 
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
+
+export async function addLog(action: string) {
+    const token: any = localStorage.getItem("auth")
+    try {
+        const res = await axios.post(apiUrl + "/log/", null,
+            {
+                params: {
+                    token: token,
+                    action: action
+                }
+            })
+        console.log('Response log: ', res)
+    } catch (e) {
+        console.log('Err add log: ', e)
+    }
+}
 
 async function getBase64(file: any) {
     return new Promise((resolve, reject) => {
@@ -161,13 +178,9 @@ export const dataProvider: DataProvider = {
                     body: formData,
                     credentials: 'include'
                 });
-
+                await addLog(`Thêm nguời dùng mới có username: ${formData.get("username")}`)
                 window.location.href = `/#/${resource}`;
                 return Promise.resolve({data: json});
-            }
-
-            if (resource === 'order'){
-
             }
         } catch (e) {
             console.log('err', e)
@@ -320,6 +333,7 @@ export const dataProvider: DataProvider = {
                 credentials: 'include'
             });
 
+            await addLog(`Sửa thông tin người dùng có username ${params.data.id}`)
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
         }
@@ -421,6 +435,11 @@ export const dataProvider: DataProvider = {
             }),
             credentials: 'include'
         })
+        // switch (resource){
+        //     case 'order':
+        //         await addLog(`Sửa thông tin đơn hàng có id ${params.data.id}`)
+        //         break
+        // }
         return Promise.resolve({data: json});
     },
     updateMany:
@@ -435,6 +454,14 @@ export const dataProvider: DataProvider = {
                     Accept: 'application/json',
                 }),
             });
+            switch (resource){
+                case 'user':
+                    await addLog(`Xóa thông tin người dùng có id: ${params.id}`)
+                    break
+                case 'order':
+                    await addLog(`Xóa thông tin đơn hàng có id: ${params.id}`)
+                    break
+            }
             // console.log("Params: ", params)
             console.log("Data delete:", json)
             return {data: json};

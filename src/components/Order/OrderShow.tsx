@@ -120,6 +120,11 @@ export const OrderShow = (props: any) => {
                             </Labeled>
                         </Grid>
                     </Grid>
+                    <Grid>
+                        <Labeled label={'Trạng Thái Đơn Hàng'}>
+                            <TextField source={'deliveryStatus.description'}/>
+                        </Labeled>
+                    </Grid>
                 </TabbedShowLayout.Tab>
 
                 <TabbedShowLayout.Tab label={"Sản phẩm"}>

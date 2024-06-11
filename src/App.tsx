@@ -1,5 +1,5 @@
 import React from 'react';
-import {Admin, Login, radiantLightTheme, Resource} from "react-admin";
+import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource} from "react-admin";
 import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
 import CategoryList from "./components/category/CategoryList";
@@ -12,6 +12,7 @@ import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
 import BlogIcon from '@mui/icons-material/Book';
 import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
+import ArticleIcon from '@mui/icons-material/Article';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -35,6 +36,8 @@ import {BlogEdit} from "./components/blogs/BlogEdit";
 import OrderList from "./components/Order/OrderList";
 import {OrderShow} from "./components/Order/OrderShow";
 import {ReviewList} from "./components/reviews/ReviewList";
+import LogList from "./components/Log/LogList";
+
 
 function App() {
     return (
@@ -42,6 +45,7 @@ function App() {
             title="Admin"
             dataProvider={dataProvider}
             theme={radiantLightTheme}
+            darkTheme={radiantDarkTheme}
             disableTelemetry
             authProvider={authProvider}
             loginPage={Login}
@@ -100,8 +104,13 @@ function App() {
             <Resource name={'review'}
                       list={ReviewList}
                       icon={RateReviewRoundedIcon}
-                        options={{label: "Đánh giá"}}
+                      options={{label: "Đánh giá"}}
             ></Resource>
+            <Resource name={'log'}
+                      list={LogList}
+                      options={{label: "Log"}}
+                      icon={ArticleIcon}
+            />
         </Admin>
     );
 }
