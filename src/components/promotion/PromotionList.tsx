@@ -14,7 +14,6 @@ import {
 
 import {
     List,
-    NumberField,
     TextField,
     BulkDeleteButton,
     BulkUpdateButton,
@@ -47,12 +46,6 @@ export const PromotionList = () => {
         >
             <DatagridConfigurable
                 rowClick="show"
-                bulkActionButtons={
-                    <>
-                        <BulkUpdateButton data={{stock: 100}} label="Refill stock"/>
-                        <BulkDeleteButton/>
-                    </>
-                }
             >
                 <TextField source="name" label="Tên SP"/>
                 <TextField sx={{m: "auto"}} source="description" label="Mô tả"/>
@@ -65,7 +58,7 @@ export const PromotionList = () => {
                 <TextField source={'startDate'} label={"Ngày bắt đầu"}/>
                 <TextField source={'endDate'} label={"Ngày kết thúc"}/>
                 <EditButton sx={{marginRight: "30px"}}/>
-                <DeleteButton/>
+                <DeleteButton />
             </DatagridConfigurable>
 
         </List>)

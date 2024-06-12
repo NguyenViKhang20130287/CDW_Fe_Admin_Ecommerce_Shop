@@ -12,6 +12,8 @@ import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
 import BlogIcon from '@mui/icons-material/Book';
 import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
+import ColorLensRoundedIcon from '@mui/icons-material/ColorLensRounded';
+import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
 import ArticleIcon from '@mui/icons-material/Article';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
@@ -36,12 +38,20 @@ import {BlogEdit} from "./components/blogs/BlogEdit";
 import OrderList from "./components/Order/OrderList";
 import {OrderShow} from "./components/Order/OrderShow";
 import {ReviewList} from "./components/reviews/ReviewList";
+import Dashboard from "./components/dashboard/Dashboard";
+import ColorList from "./components/color/ColorList";
+import SizeList from "./components/size/SizeList";
+import {ColorCreate} from "./components/color/ColorCreate";
+import {ColorEdit} from "./components/color/ColorEdit";
+import {SizeCreate} from "./components/size/SizeCreate";
+import {SizeEdit} from "./components/size/SizeEdit";
 import LogList from "./components/Log/LogList";
 
 
 function App() {
     return (
         <Admin
+            dashboard={Dashboard}
             title="Admin"
             dataProvider={dataProvider}
             theme={radiantLightTheme}
@@ -65,6 +75,22 @@ function App() {
                       recordRepresentation={(product) => product.name}
                       show={ProductShow}
                       options={{label: "Sản phẩm"}}/>
+            <Resource name={'color'}
+                      list={ColorList}
+                      create={ColorCreate}
+                      edit={ColorEdit}
+                      icon={ColorLensRoundedIcon}
+                      options={{label: "Màu sắc"}}
+            />
+
+            <Resource name={'size'}
+                      list={SizeList}
+                      create={SizeCreate}
+                      edit={SizeEdit}
+                      icon={DesignServicesRoundedIcon}
+                      options={{label: "Kích thước"}}
+            />
+
             <Resource name={'category'}
                       list={CategoryList}
                       create={CategoryCreate}
@@ -111,6 +137,7 @@ function App() {
                       options={{label: "Log"}}
                       icon={ArticleIcon}
             />
+
         </Admin>
     );
 }

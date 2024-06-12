@@ -23,7 +23,7 @@ const ApproveButton: React.FC<{ record: any }> = ({ record }) => {
     const handleClick = () => {
         dataProvider.update('review', { id: record.id, data: { typeStatus: 1 }, previousData: record })
             .then(() => {
-                notify('Review approved successfully', { type: 'info' });
+                notify('Review xác nhận thành công', { type: 'info' });
                 refresh();
             })
             .catch((error) => {
@@ -42,7 +42,7 @@ const RejectButton: React.FC<{ record: any }> = ({ record }) => {
     const handleClick = () => {
         dataProvider.update('review', { id: record.id, data: { typeStatus: 2 }, previousData: record })
             .then(() => {
-                notify('Review rejected successfully', { type: 'info' });
+                notify('Review từ chối thành công', { type: 'info' });
                 refresh();
             })
             .catch((error) => {
@@ -78,7 +78,6 @@ export const ReviewList = () => {
             >
                 <TextField source="id" label="ID"/>
                 <TextField source="product.name" label="Tên SP"/>
-                <TextField sx={{m: "auto"}} source="stars" label="Sao"/>
                 <FunctionField
                     source="stars"
                     label="Sao"
