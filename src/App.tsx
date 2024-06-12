@@ -1,5 +1,5 @@
 import React from 'react';
-import {Admin, Login, radiantLightTheme, Resource} from "react-admin";
+import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource} from "react-admin";
 import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
 import CategoryList from "./components/category/CategoryList";
@@ -10,9 +10,11 @@ import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import PromotionIcon from '@mui/icons-material/LocalOffer';
 import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
 import BlogIcon from '@mui/icons-material/Book';
+import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import ColorLensRoundedIcon from '@mui/icons-material/ColorLensRounded';
 import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
+import ArticleIcon from '@mui/icons-material/Article';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -33,6 +35,8 @@ import BlogList from "./components/blogs/BlogList";
 import BlogShow from "./components/blogs/BlogShow";
 import {BlogCreate} from "./components/blogs/BlogCreate";
 import {BlogEdit} from "./components/blogs/BlogEdit";
+import OrderList from "./components/Order/OrderList";
+import {OrderShow} from "./components/Order/OrderShow";
 import {ReviewList} from "./components/reviews/ReviewList";
 import Dashboard from "./components/dashboard/Dashboard";
 import ColorList from "./components/color/ColorList";
@@ -41,6 +45,8 @@ import {ColorCreate} from "./components/color/ColorCreate";
 import {ColorEdit} from "./components/color/ColorEdit";
 import {SizeCreate} from "./components/size/SizeCreate";
 import {SizeEdit} from "./components/size/SizeEdit";
+import LogList from "./components/Log/LogList";
+
 
 function App() {
     return (
@@ -49,6 +55,7 @@ function App() {
             title="Admin"
             dataProvider={dataProvider}
             theme={radiantLightTheme}
+            darkTheme={radiantDarkTheme}
             disableTelemetry
             authProvider={authProvider}
             loginPage={Login}
@@ -100,6 +107,12 @@ function App() {
                       show={PromotionShow}
                       options={{label: "Khuyến mãi"}}
             />
+            <Resource name={'order'}
+                      list={OrderList}
+                      options={{label: "Đơn hàng"}}
+                      icon={ReceiptRoundedIcon}
+                      show={OrderShow}
+            />
             <Resource name={'warehouse'}
                       list={ImportInvoiceList}
                       create={ImportInvoiceCreate}
@@ -119,6 +132,11 @@ function App() {
                       icon={RateReviewRoundedIcon}
                       options={{label: "Đánh giá"}}
             ></Resource>
+            <Resource name={'log'}
+                      list={LogList}
+                      options={{label: "Log"}}
+                      icon={ArticleIcon}
+            />
 
         </Admin>
     );

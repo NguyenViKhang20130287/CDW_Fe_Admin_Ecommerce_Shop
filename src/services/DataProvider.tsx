@@ -1,9 +1,26 @@
 import {DataProvider, fetchUtils} from 'react-admin'
 import {cloneFile} from "./config";
 import {imgProvider} from "../imgProvider/imageUrl";
+import axios from "axios";
 
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
+
+export async function addLog(action: string) {
+    const token: any = localStorage.getItem("auth")
+    try {
+        const res = await axios.post(apiUrl + "/log/", null,
+            {
+                params: {
+                    token: token,
+                    action: action
+                }
+            })
+        console.log('Response log: ', res)
+    } catch (e) {
+        console.log('Err add log: ', e)
+    }
+}
 
 async function getBase64(file: any) {
     return new Promise((resolve, reject) => {
@@ -14,6 +31,28 @@ async function getBase64(file: any) {
         }
         reader.onerror = reject
     })
+}
+
+async function getImageUrl(file: any) {
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+        const response = await
+            fetch('https://api.imgbb.com/1/upload?key=8c2c7c5c94797f04504f969ec51749a4',
+                {
+                    method: 'POST',
+                    body: formData
+                });
+
+        const result = await response.json();
+        if (result.success) {
+            return JSON.stringify(result.data.url)
+        } else {
+            console.error("Error uploading image to ImgBB", result);
+        }
+    } catch (error) {
+        console.error("Error uploading image to ImgBB", error);
+    }
 }
 
 export const dataProvider: DataProvider = {
@@ -39,8 +78,8 @@ export const dataProvider: DataProvider = {
                 }),
                 credentials: 'include',
             })
-            console.log("Json: ", json)
-            console.log("Content: ", json.content)
+            // console.log("Json: ", json)
+            // console.log("Content: ", json.content)
             return {
                 data: json.content,
                 total: parseInt(json.totalElements, 10),
@@ -111,38 +150,43 @@ export const dataProvider: DataProvider = {
     create: async (resource: any, params: any) => {
         console.log("param create ", params)
         // try {
-        if (resource === 'user') {
-            const formData = new FormData();
-            if (params.data.avatar && params.data.avatar.src && params.data.avatar.src.rawFile) {
-                console.log('ok')
-                const avt = cloneFile(params.data.avatar.src.rawFile, params.data.avatar.src.rawFile.name);
-                formData.append('avatar', avt);
-                console.log("Check file: ", avt instanceof File)
-                console.log('Avatar: ', avt)
+        try {
+            if (resource === 'user') {
+                const formData = new FormData();
+                if (params.data.avatar && params.data.avatar.src && params.data.avatar.src.rawFile) {
+                    const avt = cloneFile(params.data.avatar.src.rawFile, params.data.avatar.src.rawFile.name);
+                    // @ts-ignore
+                    formData.append('avatarLink', JSON.parse(await getImageUrl(avt)));
+                    // console.log("Check file: ", avt instanceof File)
+                    // console.log('Avatar: ', avt)
+                }
+                formData.append('username', params.data.username || '');
+                formData.append('email', params.data.email || '');
+                formData.append('fullName', params.data.fullName || '');
+                formData.append('phone', params.data.phone || '');
+                formData.append('permission', params.data.permission || '');
+
+                console.log('Form Data: ', formData);
+
+                if (formData.entries().next().done) {
+                    console.error('FormData is empty');
+                    return Promise.reject('FormData is empty');
+                }
+                // console.log('Params: ', params)
+                const {json} = await httpClient(`${apiUrl}/${resource}`, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                await addLog(`Thêm nguời dùng mới có username: ${formData.get("username")}`)
+                window.location.href = `/#/${resource}`;
+                return Promise.resolve({data: json});
             }
-            formData.append('username', params.data.username || '');
-            formData.append('email', params.data.email || '');
-            formData.append('fullName', params.data.fullName || '');
-            formData.append('address', params.data.address || '');
-            formData.append('phone', params.data.phone || '');
-            formData.append('permission', params.data.permission || '');
-
-            console.log('Form Data: ', formData);
-
-            if (formData.entries().next().done) {
-                console.error('FormData is empty');
-                return Promise.reject('FormData is empty');
-            }
-            // console.log('Params: ', params)
-            const {json} = await httpClient(`${apiUrl}/${resource}`, {
-                method: 'POST',
-                body: formData,
-                credentials: 'include'
-            });
-
-            window.location.href = `/#/${resource}`;
-            return Promise.resolve({data: json});
+        } catch (e) {
+            console.log('err', e)
         }
+
+        //
         let thumbnail = null;
         let imageProducts = [];
         if (resource === 'product') {
@@ -240,13 +284,13 @@ export const dataProvider: DataProvider = {
         }
 
     }
-    // catch (error: any) {
-    //     if (error.status === 401) {
-    //         // @ts-ignore
-    //         authProvider.logout().then(r => console.log(r));
-    //         window.location.href = '/#/login';
+    //     catch(error: any) {
+    //         if (error.status === 401) {
+    //             // @ts-ignore
+    //             authProvider.logout().then(r => console.log(r));
+    //             window.location.href = '/#/login';
+    //         }
     //     }
-    // }
     // }
     ,
     update: async (resource: any, params: any) => {
@@ -255,15 +299,18 @@ export const dataProvider: DataProvider = {
         console.log(" updated params: ", params)
         let category = null;
         let colorSizes = null;
+        //
         if (resource === 'user') {
             console.log('Params user: ', params)
             const formData = new FormData();
             if (typeof params.data.avatar.src !== 'undefined') {
                 const avt = cloneFile(params.data.avatar.src.rawFile,
                     params.data.avatar.src.rawFile.name);
-                formData.append('avatar', avt);
-                console.log("Check file: ", avt instanceof File)
-                console.log('Avatar: ', avt)
+                // @ts-ignore
+                console.log('Avatar: ', JSON.parse(await getImageUrl(avt)))
+
+                // @ts-ignore
+                formData.append('avatarLink', JSON.parse(await getImageUrl(avt)));
             }
             formData.append('username', params.data.username || '');
             formData.append('email', params.data.userInformation.email || '');
@@ -271,7 +318,7 @@ export const dataProvider: DataProvider = {
             formData.append('address', params.data.userInformation.address || '');
             formData.append('phone', params.data.userInformation.phone || '');
             formData.append('permission', params.data.permission.id || '');
-            formData.append('status', params.data.status || '');
+            formData.append('status', params.data.status.toString() || '');
 
             console.log('Form Data: ', formData);
 
@@ -286,6 +333,7 @@ export const dataProvider: DataProvider = {
                 credentials: 'include'
             });
 
+            await addLog(`Sửa thông tin người dùng có username ${params.data.id}`)
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
         }
@@ -363,7 +411,10 @@ export const dataProvider: DataProvider = {
             }
             const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
                 method: 'PUT',
-                body: JSON.stringify({...params.data,  thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail}),
+                body: JSON.stringify({
+                    ...params.data,
+                    thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail
+                }),
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -373,6 +424,7 @@ export const dataProvider: DataProvider = {
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
         }
+        //
         console.log(" updated params: ", params)
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
@@ -383,20 +435,35 @@ export const dataProvider: DataProvider = {
             }),
             credentials: 'include'
         })
+        // switch (resource){
+        //     case 'order':
+        //         await addLog(`Sửa thông tin đơn hàng có id ${params.data.id}`)
+        //         break
+        // }
         return Promise.resolve({data: json});
     },
-    updateMany: (resource: any, params: any) => Promise.resolve({data: []}),
+    updateMany:
+        (resource: any, params: any) => Promise.resolve({data: []}),
 
-    delete: async (resource: any, params: any) => {
-        const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
-            method: 'DELETE',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }),
-        });
-        // console.log("Params: ", params)
-        console.log("Data delete:", json)
-        return {data: json};
-    },
+    delete:
+        async (resource: any, params: any) => {
+            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+            });
+            switch (resource){
+                case 'user':
+                    await addLog(`Xóa thông tin người dùng có id: ${params.id}`)
+                    break
+                case 'order':
+                    await addLog(`Xóa thông tin đơn hàng có id: ${params.id}`)
+                    break
+            }
+            // console.log("Params: ", params)
+            console.log("Data delete:", json)
+            return {data: json};
+        },
 }

@@ -1,14 +1,12 @@
 import React, {useState} from "react";
 import {
     CreateButton,
-    Datagrid,
     DatagridConfigurable,
     DeleteButton,
     EditButton,
     ExportButton, FunctionField,
     List,
-    Pagination,
-    SelectColumnsButton, ShowButton,
+    SelectColumnsButton,
     TextField,
     TopToolbar
 }
