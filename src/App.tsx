@@ -11,6 +11,8 @@ import PromotionIcon from '@mui/icons-material/LocalOffer';
 import WarehouseRoundedIcon from '@mui/icons-material/WarehouseRounded';
 import BlogIcon from '@mui/icons-material/Book';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
+import ColorLensRoundedIcon from '@mui/icons-material/ColorLensRounded';
+import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -32,10 +34,18 @@ import BlogShow from "./components/blogs/BlogShow";
 import {BlogCreate} from "./components/blogs/BlogCreate";
 import {BlogEdit} from "./components/blogs/BlogEdit";
 import {ReviewList} from "./components/reviews/ReviewList";
+import Dashboard from "./components/dashboard/Dashboard";
+import ColorList from "./components/color/ColorList";
+import SizeList from "./components/size/SizeList";
+import {ColorCreate} from "./components/color/ColorCreate";
+import {ColorEdit} from "./components/color/ColorEdit";
+import {SizeCreate} from "./components/size/SizeCreate";
+import {SizeEdit} from "./components/size/SizeEdit";
 
 function App() {
     return (
         <Admin
+            dashboard={Dashboard}
             title="Admin"
             dataProvider={dataProvider}
             theme={radiantLightTheme}
@@ -58,6 +68,22 @@ function App() {
                       recordRepresentation={(product) => product.name}
                       show={ProductShow}
                       options={{label: "Sản phẩm"}}/>
+            <Resource name={'color'}
+                      list={ColorList}
+                      create={ColorCreate}
+                      edit={ColorEdit}
+                      icon={ColorLensRoundedIcon}
+                      options={{label: "Màu sắc"}}
+            />
+
+            <Resource name={'size'}
+                      list={SizeList}
+                      create={SizeCreate}
+                      edit={SizeEdit}
+                      icon={DesignServicesRoundedIcon}
+                      options={{label: "Kích thước"}}
+            />
+
             <Resource name={'category'}
                       list={CategoryList}
                       create={CategoryCreate}
@@ -91,8 +117,9 @@ function App() {
             <Resource name={'review'}
                       list={ReviewList}
                       icon={RateReviewRoundedIcon}
-                        options={{label: "Đánh giá"}}
+                      options={{label: "Đánh giá"}}
             ></Resource>
+
         </Admin>
     );
 }
