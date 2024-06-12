@@ -268,7 +268,31 @@ export const dataProvider: DataProvider = {
 
             window.location.href = `/#/${resource}`
             return Promise.resolve({data: json});
-        } else {
+        }
+        if(resource === "slider"){
+            if (params.data.link !== undefined && params.data.link !== null) {
+                let selectedImg = null;
+                await getBase64(params.data.link.rawFile)
+                    .then(res => {
+                        selectedImg = res;
+                    })
+                    .catch(err => console.log(err))
+                thumbnail = await imgProvider(selectedImg);
+            }
+            const {json} = await httpClient(`${apiUrl}/${resource}`, {
+                method: 'POST',
+                body: JSON.stringify({...params.data, link: thumbnail}),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+                credentials: 'include'
+            })
+
+            window.location.href = `/#/${resource}`
+            return Promise.resolve({data: json});
+        }
+        else {
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
                 body: JSON.stringify(resource === "warehouse" ? params.data.ImportInvoiceRequest : params.data),
@@ -414,6 +438,31 @@ export const dataProvider: DataProvider = {
                 body: JSON.stringify({
                     ...params.data,
                     thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail
+                }),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                }),
+                credentials: 'include'
+            })
+            window.location.href = `/#/${resource}`;
+            return Promise.resolve({data: json});
+        }
+        if (resource === 'slider') {
+            if (params.data.link_new !== undefined && params.data.link_new !== null) {
+                let selectedImg = null;
+                await getBase64(params.data.link_new.rawFile)
+                    .then(res => {
+                        selectedImg = res;
+                    })
+                    .catch(err => console.log(err))
+                thumbnail = await imgProvider(selectedImg);
+            }
+            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    ...params.data,
+                    link: thumbnail !== null ? thumbnail : params.data.link
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json',

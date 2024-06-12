@@ -145,3 +145,14 @@ export interface Review extends RaRecord {
     order_detail: OrderDetail,
     created_at: string
 }
+
+export interface Slider extends RaRecord {
+    id: number,
+    link: string,
+    description: string,
+    status: boolean,
+    created_at: string,
+    created_by: User,
+    updated_at: string,
+    updated_by: User
+}

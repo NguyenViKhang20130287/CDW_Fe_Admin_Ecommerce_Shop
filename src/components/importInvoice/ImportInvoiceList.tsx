@@ -35,11 +35,8 @@ const ImportInvoiceList = () => {
         <List
             sort={{field: 'id', order: 'ASC'}}
             perPage={10}
-            pagination={false}
-            component="div"
             actions={<ListActions/>}
             filters={postFilters}
-            sx={{backgroundColor: 'white'}}
         >
             <DatagridConfigurable>
                 <TextField source="id"/>
@@ -49,9 +46,7 @@ const ImportInvoiceList = () => {
                 <NumberField source="importPrice" label={"Giá nhập"}/>
                 <NumberField source="quantity" label={"Số lượng"}/>
                 <DateField source="createdAt" label={"Ngày nhập"}/>
-
             </DatagridConfigurable>
-            <Pagination/>
         </List>
     )
 };
