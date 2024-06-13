@@ -19,7 +19,6 @@ import {
 } from "react-admin";
 import {Theme, useMediaQuery} from "@mui/material";
 import {ProductAside} from "./ProductAside";
-import {Category} from "../../types";
 
 const visitorFilters = [
     <SearchInput alwaysOn name={"search"} source={"filter"}/>,
