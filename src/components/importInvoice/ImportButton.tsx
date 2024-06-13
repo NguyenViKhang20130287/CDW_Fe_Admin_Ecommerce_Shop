@@ -3,11 +3,14 @@ import { Button, Dialog, DialogTitle, DialogContent, FormControl, InputLabel, Se
 import { useDataProvider, useNotify } from 'react-admin';
 import * as XLSX from 'xlsx';
 import { SelectChangeEvent } from '@mui/material/Select';
+import {getUserByToken} from "../../services/DataProvider";
+import { useRefresh } from 'react-admin';
 
 const ImportButton = () => {
     const [open, setOpen] = useState(false);
     const [columnHeaders, setColumnHeaders] = useState<string[]>([]);
     const [importData, setImportData] = useState<any[]>([]);
+    const refresh = useRefresh();
     const [mapping, setMapping] = useState<{ [key: string]: string }>({
         product_id: '',
         color_id: '',
@@ -67,18 +70,16 @@ const ImportButton = () => {
             importPrice: row[mapping.importPrice],
             quantity: row[mapping.quantity],
         }));
-
-        dataProvider.create('warehouse', { data: { ImportInvoiceRequest: formattedData } })
+        const user = getUserByToken();
+        dataProvider.create('warehouse', { data: { ImportInvoiceRequest: {id: 0, createdBy: user, importInvoiceDetailRequests: formattedData}  }})
             .then(({ data }) => {
-                if (!data || !data.id) {
-                    throw new Error("The response to 'create' must be like { data: { id: 123, ... } }");
-                }
-                notify('Import successful', { type: 'success' });
+                notify('Thêm hàng thành công', { type: 'success' });
+                refresh();
                 handleClose();
             })
             .catch((error) => {
                 console.log(error)
-                notify('Import failed', { type: 'warning' });
+                notify('Thêm hàng thất bại', { type: 'warning' });
             });
     };
 

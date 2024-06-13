@@ -16,7 +16,7 @@ const PendingReviews = (reviews: any) => {
     // get reviews that have status pending
     const pendingReviews = useMemo(() => {
         if (!Array.isArray(reviews.reviews)) return [];
-        return reviews.reviews.filter((review: any) => review.typeStatus === 1);
+        return reviews.reviews.filter((review: any) => review.typeStatus === 0);
     }, [reviews]);
 
     return (

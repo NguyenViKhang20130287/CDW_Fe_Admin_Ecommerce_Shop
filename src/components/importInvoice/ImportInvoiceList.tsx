@@ -5,21 +5,22 @@ import {
     DatagridConfigurable,
     DateField,
     ExportButton,
-    FilterButton,
+    FilterButton, FunctionField,
     List,
     NumberField,
     Pagination,
     SelectColumnsButton,
     TextField,
     TextInput,
-    TopToolbar
+    TopToolbar, useListController
 } from 'react-admin';
 import ImportButton from "./ImportButton";
+import ImportInvoiceShow from "./ImportInvoiceShow";
 
 const ListActions = () => (
     <TopToolbar>
-        <CreateButton label={'Nhập kho'}/>
         <ImportButton/>
+        <CreateButton label={'Nhập hàng thủ công'}/>
         <SelectColumnsButton/>
         <FilterButton/>
         <ExportButton label={"Xuất File"}/>
@@ -31,27 +32,50 @@ const postFilters = [
 ];
 
 const ImportInvoiceList = () => {
+    const {data, isLoading}: any = useListController();
+
+    if (isLoading) return null;
+
+    const getQuantity = (record: any) => {
+        let quantity = 0;
+        for (let i = 0; i < record.importWarehouseDetails.length; i++) {
+            quantity += record.importWarehouseDetails[i].quantity;
+        }
+        return quantity;
+    }
     return (
         <List
             sort={{field: 'id', order: 'ASC'}}
             perPage={10}
-            pagination={false}
-            component="div"
             actions={<ListActions/>}
             filters={postFilters}
-            sx={{backgroundColor: 'white'}}
         >
-            <DatagridConfigurable>
-                <TextField source="id"/>
-                <TextField source="product.name" label={"Tên sản phẩm"}/>
-                <TextField source="color.name" label={"Màu sắc"}/>
-                <TextField source="size.name" label={"Kích thước"}/>
-                <NumberField source="importPrice" label={"Giá nhập"}/>
-                <NumberField source="quantity" label={"Số lượng"}/>
-                <DateField source="createdAt" label={"Ngày nhập"}/>
-
+            <DatagridConfigurable rowClick="expand" expandSingle expand={<ImportInvoiceShow/>} bulkActionButtons={false}
+                                  empty={
+                                      <div style={
+                                          {
+                                              display: 'flex',
+                                              justifyContent: 'center',
+                                              alignItems: 'center',
+                                              height: '100%'
+                                          }
+                                      }>
+                                          <p style={
+                                              {
+                                                  fontSize: '28px',
+                                                  color: '#8f8f8f'
+                                              }
+                                          }>Hiện không có dữ liệu</p>
+                                      </div>
+                                  }>
+                <TextField source="id" label={"Mã nhập hàng"}/>
+                <DateField source="createdAt" label={"Ngày nhập hàng"}/>
+                <TextField source="createdBy.username" label={"Người nhập hàng"}/>
+                <FunctionField render={(record: any) => (
+                    <span>{getQuantity(record)}</span>
+                )} label={"Số lượng"}/>
+                <NumberField source="totalAmount" label={"Tổng tiền"}/>
             </DatagridConfigurable>
-            <Pagination/>
         </List>
     )
 };

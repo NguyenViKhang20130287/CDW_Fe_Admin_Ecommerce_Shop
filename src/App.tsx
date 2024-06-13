@@ -15,6 +15,7 @@ import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import ColorLensRoundedIcon from '@mui/icons-material/ColorLensRounded';
 import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
 import ArticleIcon from '@mui/icons-material/Article';
+import SlideshowRoundedIcon from '@mui/icons-material/SlideshowRounded';
 import DiscountIcon from '@mui/icons-material/Discount';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
@@ -38,7 +39,6 @@ import {BlogCreate} from "./components/blogs/BlogCreate";
 import {BlogEdit} from "./components/blogs/BlogEdit";
 import OrderList from "./components/Order/OrderList";
 import {OrderShow} from "./components/Order/OrderShow";
-import {ReviewList} from "./components/reviews/ReviewList";
 import Dashboard from "./components/dashboard/Dashboard";
 import ColorList from "./components/color/ColorList";
 import SizeList from "./components/size/SizeList";
@@ -47,6 +47,11 @@ import {ColorEdit} from "./components/color/ColorEdit";
 import {SizeCreate} from "./components/size/SizeCreate";
 import {SizeEdit} from "./components/size/SizeEdit";
 import LogList from "./components/Log/LogList";
+import SliderList from "./components/slider/SliderList";
+import {SliderCreate} from "./components/slider/SliderCreate";
+import {SliderEdit} from "./components/slider/SliderEdit";
+import SliderShow from "./components/slider/SliderShow";
+import ReviewList from "./components/reviews/ReviewList";
 import DiscountCodeList from "./components/DiscountCode/DiscountCodeList";
 import {DiscountCodeCreate} from "./components/DiscountCode/DiscountCodeCreate";
 import {DiscountCodeEdit} from "./components/DiscountCode/DiscountCodeEdit";
@@ -142,11 +147,19 @@ function App() {
                       list={ReviewList}
                       icon={RateReviewRoundedIcon}
                       options={{label: "Đánh giá"}}
-            ></Resource>
+            />
             <Resource name={'log'}
                       list={LogList}
                       options={{label: "Log"}}
                       icon={ArticleIcon}
+            />
+            <Resource name={'slider'}
+                      list={SliderList}
+                      create={SliderCreate}
+                      edit={SliderEdit}
+                      show={SliderShow}
+                      icon={SlideshowRoundedIcon}
+                      options={{label: "Slider trang chủ"}}
             />
 
         </Admin>

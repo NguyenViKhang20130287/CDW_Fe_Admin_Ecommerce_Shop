@@ -4,10 +4,10 @@ export interface Category extends RaRecord {
     id: number,
     name: string,
     status: boolean,
-    created_at: string,
-    created_by: User,
-    updated_at: string,
-    updated_by: User
+    createdAt: string,
+    createdBy: User,
+    updatedAt: string,
+    updatedBy: User
 }
 
 export interface Product extends RaRecord {
@@ -20,10 +20,10 @@ export interface Product extends RaRecord {
     quantity: number,
     sold: number,
     status: boolean,
-    created_at: string,
-    created_by: User,
-    updated_at: string,
-    updated_by: User
+    createdAt: string,
+    createdBy: User,
+    updatedAt: string,
+    updatedBy: User
 }
 
 export interface User extends RaRecord {
@@ -32,7 +32,7 @@ export interface User extends RaRecord {
     password: string,
     permission: Permission,
     status: boolean
-    user_information: UserInformation
+    userInformation: UserInformation
 }
 
 export interface UserInformation extends RaRecord {
@@ -42,8 +42,8 @@ export interface UserInformation extends RaRecord {
     phone: string,
     address: string,
     avatar: string,
-    created_at: string,
-    updated_at: string
+    createdAt: string,
+    updatedAt: string
 }
 
 export interface Permission extends RaRecord {
@@ -54,7 +54,7 @@ export interface Permission extends RaRecord {
 export interface Color extends RaRecord {
     id: number,
     name: string,
-    color_code: string
+    colorCode: string
 }
 
 export interface Size extends RaRecord {
@@ -66,14 +66,14 @@ export interface Promotion extends RaRecord {
     id: number,
     name: string,
     description: string,
-    discount_rate: number,
-    start_date: string,
-    end_date: string,
+    discountRate: number,
+    startDate: string,
+    endDate: string,
     status: boolean,
-    created_at: string,
-    created_by: User,
-    updated_at: string,
-    updated_by: User
+    createdAt: string,
+    createdBy: User,
+    updatedAt: string,
+    updatedBy: User
 }
 
 export interface ColorSize extends RaRecord {
@@ -90,10 +90,10 @@ export interface Blog extends RaRecord {
     content: string,
     thumbnail: string,
     status: boolean,
-    created_at: string,
-    created_by: User,
-    updated_at: string,
-    updated_by: User
+    createdAt: string,
+    createdBy: User,
+    updatedAt: string,
+    updatedBy: User
 }
 
 export interface Order extends RaRecord {
@@ -102,20 +102,20 @@ export interface Order extends RaRecord {
     full_name: string,
     address: string,
     phone: string,
-    payment_method: string,
-    payment_status: string,
-    total_amount: number,
-    discount_code: DiscountCode,
+    paymentMethod: string,
+    paymentStatus: string,
+    totalAmount: number,
+    discountCode: DiscountCode,
     shipping_cost: number,
-    created_at: string,
-    order_details: OrderDetail[]
+    createdAt: string,
+    orderDetails: OrderDetail[]
 }
 
 export interface OrderDetail extends RaRecord {
     id: number,
     order: Order,
     product: Product,
-    product_name: string,
+    productName: string,
     color: Color,
     size: Size,
     quantity: number,
@@ -125,14 +125,14 @@ export interface OrderDetail extends RaRecord {
 export interface DiscountCode extends RaRecord {
     id: number,
     code: string,
-    discount_rate: number,
-    start_date: string,
-    end_date: string,
+    discountRate: number,
+    startDate: string,
+    endDate: string,
     status: boolean,
-    created_at: string,
-    created_by: User,
-    updated_at: string,
-    updated_by: User
+    createdAt: string,
+    createdBy: User,
+    updatedAt: string,
+    updatedBy: User
 }
 
 export interface Review extends RaRecord {
@@ -141,7 +141,36 @@ export interface Review extends RaRecord {
     product: Product,
     stars: number,
     content: string,
-    type_status: number,
-    order_detail: OrderDetail,
-    created_at: string
+    typeStatus: number,
+    orderDetail: OrderDetail,
+    createdAt: string
+}
+
+export interface Slider extends RaRecord {
+    id: number,
+    link: string,
+    description: string,
+    status: boolean,
+    createdAt: string,
+    createdBy: User,
+    updatedAt: string,
+    updatedBy: User
+}
+
+export interface ImportInvoice extends RaRecord {
+    id: number,
+    totalAmount: number,
+    createdAt: string,
+    importInvoiceDetails: ImportInvoiceDetail[]
+
+}
+
+export interface ImportInvoiceDetail extends RaRecord{
+    id: number,
+    importInvoice: ImportInvoice,
+    product: Product,
+    color: Color,
+    size: Size,
+    import_price: number,
+    quantity: number
 }

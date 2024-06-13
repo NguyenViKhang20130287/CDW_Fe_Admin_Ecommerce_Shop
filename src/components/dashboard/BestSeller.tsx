@@ -19,7 +19,7 @@ const BestSeller = (products: any) => {
         <Card sx={{ flex: 1 }}>
             <CardHeader title={"Sản phẩm bán chạy"} />
             <FixedSizeList
-                height={400}
+                height={880}
                 itemCount={products.products.length}
                 itemSize={60}
                 width="100%"

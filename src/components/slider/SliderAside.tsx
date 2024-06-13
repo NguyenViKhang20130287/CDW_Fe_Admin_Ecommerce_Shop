@@ -8,7 +8,7 @@ import {
 
 import LockIcon from "@mui/icons-material/Lock";
 
-export const ProductAside = () => {
+const SliderAside = () => {
     return (
         <Card
             sx={{
@@ -25,6 +25,7 @@ export const ProductAside = () => {
         >
             <CardContent sx={{pt: 1}}>
                 <FilterLiveSearch label={"Tìm..."} name={"search"}/>
+
                 <FilterList
                     label="Trạng thái"
                     icon={<LockIcon/>}
@@ -46,4 +47,4 @@ export const ProductAside = () => {
         </Card>
     );
 };
-
+export default SliderAside;
