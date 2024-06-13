@@ -22,17 +22,22 @@ export const UserShow = () => {
                         </Labeled>
                     </Grid>
                     <Grid item xs={4}>
+                        <Labeled label={'Username'}>
+                            <TextField source={'username'}/>
+                        </Labeled>
+                    </Grid>
+                    <Grid item xs={4}>
                         <Labeled label={'Họ và Tên'}>
                             <TextField source={'userInformation.fullName'}/>
                         </Labeled>
                     </Grid>
+                </Grid>
+                <Grid container spacing={2}>
                     <Grid item xs={4}>
                         <Labeled label={'Email'}>
                             <TextField source={'userInformation.email'}/>
                         </Labeled>
                     </Grid>
-                </Grid>
-                <Grid container spacing={2}>
                     <Grid item xs={4}>
                         <Labeled label={'Số Điện Thoại'}>
                             <TextField source={'userInformation.phone'}/>
