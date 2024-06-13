@@ -156,3 +156,21 @@ export interface Slider extends RaRecord {
     updated_at: string,
     updated_by: User
 }
+
+export interface ImportInvoice extends RaRecord {
+    id: number,
+    total_amount: number,
+    created_at: string,
+    import_invoice_details: ImportInvoiceDetail[]
+
+}
+
+export interface ImportInvoiceDetail extends RaRecord{
+    id: number,
+    import_invoice: ImportInvoice,
+    product: Product,
+    color: Color,
+    size: Size,
+    import_price: number,
+    quantity: number
+}

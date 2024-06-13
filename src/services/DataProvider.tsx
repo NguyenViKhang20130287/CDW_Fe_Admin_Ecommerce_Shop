@@ -2,6 +2,7 @@ import {DataProvider, fetchUtils} from 'react-admin'
 import {cloneFile} from "./config";
 import {imgProvider} from "../imgProvider/imageUrl";
 import axios from "axios";
+import {useEffect} from "react";
 
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
@@ -55,8 +56,21 @@ async function getImageUrl(file: any) {
     }
 }
 
+//get user by token
+export async function getUserByToken() {
+    const token: any = localStorage.getItem("auth")
+    try {
+        const res = await axios.get(apiUrl + "/user/user-details", {
+            params: {
+                token: token
+            }
+        })
+        return res.data
+    } catch (e) {
+        console.log('Err get user by token: ', e)
+    }
+}
 export const dataProvider: DataProvider = {
-
 // @ts-ignore
     getList: async (resource: any, params: any) => {
         try {
@@ -149,7 +163,7 @@ export const dataProvider: DataProvider = {
     // @ts-ignore
     create: async (resource: any, params: any) => {
         console.log("param create ", params)
-        // try {
+        const user = await getUserByToken();
         try {
             if (resource === 'user') {
                 const formData = new FormData();
@@ -157,8 +171,6 @@ export const dataProvider: DataProvider = {
                     const avt = cloneFile(params.data.avatar.src.rawFile, params.data.avatar.src.rawFile.name);
                     // @ts-ignore
                     formData.append('avatarLink', JSON.parse(await getImageUrl(avt)));
-                    // console.log("Check file: ", avt instanceof File)
-                    // console.log('Avatar: ', avt)
                 }
                 formData.append('username', params.data.username || '');
                 formData.append('email', params.data.email || '');
@@ -224,17 +236,17 @@ export const dataProvider: DataProvider = {
             }));
             const {data: category} = await dataProvider.getOne('category', {id: params.data.category});
             params.data.category = category;
-            // params.data.thumbnail = thumbnail;
-            // params.data.imageProducts = imageProducts;
-            params.data.createdBy = null;
-            params.data.updatedBy = null;
+            params.data.createdBy = user;
+            params.data.updatedBy = user;
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
                 body: JSON.stringify({
                     ...params.data,
                     category: category,
                     thumbnail: thumbnail,
-                    imageProducts: imageProducts
+                    imageProducts: imageProducts,
+                    createdBy: user,
+                    updatedBy: user
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -256,9 +268,11 @@ export const dataProvider: DataProvider = {
                     .catch(err => console.log(err))
                 thumbnail = await imgProvider(selectedImg);
             }
+            params.data.createdBy = user;
+            params.data.updatedBy = user;
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
-                body: JSON.stringify({...params.data, thumbnail: thumbnail}),
+                body: JSON.stringify({...params.data, thumbnail: thumbnail, createdBy: user, updatedBy: user}),
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -269,7 +283,7 @@ export const dataProvider: DataProvider = {
             window.location.href = `/#/${resource}`
             return Promise.resolve({data: json});
         }
-        if(resource === "slider"){
+        if (resource === "slider") {
             if (params.data.link !== undefined && params.data.link !== null) {
                 let selectedImg = null;
                 await getBase64(params.data.link.rawFile)
@@ -279,9 +293,11 @@ export const dataProvider: DataProvider = {
                     .catch(err => console.log(err))
                 thumbnail = await imgProvider(selectedImg);
             }
+            params.data.createdBy = user
+            params.data.updatedBy = user
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
-                body: JSON.stringify({...params.data, link: thumbnail}),
+                body: JSON.stringify({...params.data, link: thumbnail, createdBy: user, updatedBy: user}),
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -291,11 +307,13 @@ export const dataProvider: DataProvider = {
 
             window.location.href = `/#/${resource}`
             return Promise.resolve({data: json});
-        }
-        else {
+        } else {
+            params.data.createdBy = user;
+            params.data.updatedBy = user;
+            params.data.ImportInvoiceRequest.createdBy = user;
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
-                body: JSON.stringify(resource === "warehouse" ? params.data.ImportInvoiceRequest : params.data),
+                body: JSON.stringify(resource === "warehouse" ? {...params.data.ImportInvoiceRequest, createdBy: user} : {...params.data, createdBy: user, updatedBy: user}),
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -318,6 +336,7 @@ export const dataProvider: DataProvider = {
     // }
     ,
     update: async (resource: any, params: any) => {
+        const user = await getUserByToken();
         let thumbnail = null;
         let imageProducts = [];
         console.log(" updated params: ", params)
@@ -386,6 +405,7 @@ export const dataProvider: DataProvider = {
                     });
                 }
             }
+            params.data.updatedBy = user;
             const {json: categoryJson} = await httpClient(`${apiUrl}/category/${params.data.category.id}`, {
                 method: 'GET',
                 headers: new Headers({
@@ -412,7 +432,8 @@ export const dataProvider: DataProvider = {
                     category,
                     colorSizes,
                     thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail,
-                    imageProducts: imageProducts.length > 0 ? imageProducts : params.data.imageProducts
+                    imageProducts: imageProducts.length > 0 ? imageProducts : params.data.imageProducts,
+                    updatedBy: user
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -433,11 +454,13 @@ export const dataProvider: DataProvider = {
                     .catch(err => console.log(err))
                 thumbnail = await imgProvider(selectedImg);
             }
+            params.data.updatedBy = user;
             const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     ...params.data,
-                    thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail
+                    thumbnail: thumbnail !== null ? thumbnail : params.data.thumbnail,
+                    updatedBy: user
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -458,11 +481,13 @@ export const dataProvider: DataProvider = {
                     .catch(err => console.log(err))
                 thumbnail = await imgProvider(selectedImg);
             }
+            params.data.updatedBy = user;
             const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     ...params.data,
-                    link: thumbnail !== null ? thumbnail : params.data.link
+                    link: thumbnail !== null ? thumbnail : params.data.link,
+                    updatedBy: user
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -475,9 +500,10 @@ export const dataProvider: DataProvider = {
         }
         //
         console.log(" updated params: ", params)
+        params.data.updatedBy = user;
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
-            body: category ? JSON.stringify({...params.data, category, colorSizes}) : JSON.stringify(params.data),
+            body: category ? JSON.stringify({...params.data, category, colorSizes, user}) : JSON.stringify({...params.data, user}),
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -503,7 +529,7 @@ export const dataProvider: DataProvider = {
                     Accept: 'application/json',
                 }),
             });
-            switch (resource){
+            switch (resource) {
                 case 'user':
                     await addLog(`Xóa thông tin người dùng có id: ${params.id}`)
                     break

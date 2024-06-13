@@ -1,7 +1,7 @@
 import {User, Order, Product, Review} from "../../types";
 import {Theme, useMediaQuery} from "@mui/material";
 import React, {CSSProperties, useMemo} from "react";
-import {endOfMonth, startOfDay, startOfMonth, subDays} from "date-fns";
+import {startOfDay, subDays} from "date-fns";
 import {useGetList} from "react-admin";
 import MonthlyRevenue from './MonthlyRevenue';
 import NbNewOrders from "./NbNewOrders";
