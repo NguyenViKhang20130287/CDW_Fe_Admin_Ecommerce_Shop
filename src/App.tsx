@@ -38,7 +38,6 @@ import {BlogCreate} from "./components/blogs/BlogCreate";
 import {BlogEdit} from "./components/blogs/BlogEdit";
 import OrderList from "./components/Order/OrderList";
 import {OrderShow} from "./components/Order/OrderShow";
-import {ReviewList} from "./components/reviews/ReviewList";
 import Dashboard from "./components/dashboard/Dashboard";
 import ColorList from "./components/color/ColorList";
 import SizeList from "./components/size/SizeList";
@@ -51,6 +50,7 @@ import SliderList from "./components/slider/SliderList";
 import {SliderCreate} from "./components/slider/SliderCreate";
 import {SliderEdit} from "./components/slider/SliderEdit";
 import SliderShow from "./components/slider/SliderShow";
+import ReviewList from "./components/reviews/ReviewList";
 
 
 function App() {

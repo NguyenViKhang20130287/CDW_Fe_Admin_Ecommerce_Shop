@@ -12,7 +12,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import React, {ReactNode} from "react";
+import React from "react";
 
 
 const ImportInvoiceShow = () => {

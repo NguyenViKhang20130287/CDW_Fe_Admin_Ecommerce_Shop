@@ -13,7 +13,7 @@ export const CategoryShow = () => (
             <TextField source="createdAt" label={'Ngày tạo'}/>
             <TextField source={'createdBy.username'} label={'Người tạo'}/>
             <TextField source="updatedAt" label={'Ngày cập nhật'}/>
-            <TextField source="updatedByy.username" label={'Người cập nhật'}/>
+            <TextField source="updatedBy.username" label={'Người cập nhật'}/>
         </SimpleShowLayout>
     </Show>
 );

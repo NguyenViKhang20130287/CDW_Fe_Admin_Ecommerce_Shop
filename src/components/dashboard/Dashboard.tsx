@@ -93,7 +93,7 @@ const DashBoard = () => {
         return useMemo(() => {
             if (!reviews) return [];
             return reviews.filter((review: any) => {
-                const reviewedDate = new Date(review.reviewedDate);
+                const reviewedDate = new Date(review.createdAt);
                 return reviewedDate && reviewedDate.getMonth() + 1 === month;
             });
         }, [reviews, month]);

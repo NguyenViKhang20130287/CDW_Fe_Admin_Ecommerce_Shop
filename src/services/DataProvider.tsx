@@ -70,6 +70,7 @@ export async function getUserByToken() {
         console.log('Err get user by token: ', e)
     }
 }
+
 export const dataProvider: DataProvider = {
 // @ts-ignore
     getList: async (resource: any, params: any) => {
@@ -92,8 +93,6 @@ export const dataProvider: DataProvider = {
                 }),
                 credentials: 'include',
             })
-            // console.log("Json: ", json)
-            // console.log("Content: ", json.content)
             return {
                 data: json.content,
                 total: parseInt(json.totalElements, 10),
@@ -128,7 +127,7 @@ export const dataProvider: DataProvider = {
             }),
             credentials: 'include',
         }).then((response: any) => {
-            result = Array.isArray(response.data) ? response.data : [response.data];
+            result = Array.isArray(response.json) ? response.json : response.json;
         })
         return Promise.resolve({data: result})
     },
@@ -164,6 +163,7 @@ export const dataProvider: DataProvider = {
     create: async (resource: any, params: any) => {
         console.log("param create ", params)
         const user = await getUserByToken();
+        console.log("user", user)
         try {
             if (resource === 'user') {
                 const formData = new FormData();
@@ -310,10 +310,12 @@ export const dataProvider: DataProvider = {
         } else {
             params.data.createdBy = user;
             params.data.updatedBy = user;
-            params.data.ImportInvoiceRequest.createdBy = user;
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
-                body: JSON.stringify(resource === "warehouse" ? {...params.data.ImportInvoiceRequest, createdBy: user} : {...params.data, createdBy: user, updatedBy: user}),
+                body: JSON.stringify(resource === "warehouse" ? {
+                    ...params.data.ImportInvoiceRequest,
+                    createdBy: user
+                } : {...params.data, createdBy: user, updatedBy: user}),
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -503,7 +505,12 @@ export const dataProvider: DataProvider = {
         params.data.updatedBy = user;
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
-            body: category ? JSON.stringify({...params.data, category, colorSizes, user}) : JSON.stringify({...params.data, user}),
+            body: category ? JSON.stringify({
+                ...params.data,
+                category,
+                colorSizes,
+                user
+            }) : JSON.stringify({...params.data, user}),
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
