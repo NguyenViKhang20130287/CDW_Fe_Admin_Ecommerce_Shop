@@ -1,4 +1,4 @@
-import {DataProvider, fetchUtils} from 'react-admin'
+import {DataProvider, fetchUtils, useNotify} from 'react-admin'
 import {cloneFile} from "./config";
 import {imgProvider} from "../imgProvider/imageUrl";
 import axios from "axios";
@@ -79,7 +79,7 @@ export const dataProvider: DataProvider = {
                 credentials: 'include',
             })
             // console.log("Json: ", json)
-            // console.log("Content: ", json.content)
+            console.log("Content: ", json.content)
             return {
                 data: json.content,
                 total: parseInt(json.totalElements, 10),
@@ -179,6 +179,18 @@ export const dataProvider: DataProvider = {
                     credentials: 'include'
                 });
                 await addLog(`Thêm nguời dùng mới có username: ${formData.get("username")}`)
+                window.location.href = `/#/${resource}`;
+                return Promise.resolve({data: json});
+            }
+            if (resource === 'discount-code'){
+                const param = {...params.data, token: localStorage.getItem("auth")}
+                // console.log('Params create discount: ', param.token)
+                const {json} = await httpClient(`${apiUrl}/${resource}`, {
+                    method: 'POST',
+                    body: JSON.stringify(param),
+                    credentials: 'include'
+                });
+                console.log('Res: ', json)
                 window.location.href = `/#/${resource}`;
                 return Promise.resolve({data: json});
             }
@@ -336,6 +348,24 @@ export const dataProvider: DataProvider = {
             await addLog(`Sửa thông tin người dùng có username ${params.data.id}`)
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
+        }
+
+        if (resource === 'discount-code'){
+            try {
+                const param = {...params.data, token: localStorage.getItem("auth")}
+                console.log(param)
+                const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(param),
+                    credentials: 'include'
+                });
+
+                await addLog(`Sửa thông tin mã giảm giá có id ${params.id}`)
+                window.location.href = `/#/${resource}`;
+                return Promise.resolve({data: json});
+            }catch (e) {
+                console.log(e)
+            }
         }
 
         if (resource === 'product') {

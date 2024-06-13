@@ -15,6 +15,7 @@ import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import ColorLensRoundedIcon from '@mui/icons-material/ColorLensRounded';
 import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
 import ArticleIcon from '@mui/icons-material/Article';
+import DiscountIcon from '@mui/icons-material/Discount';
 import {CategoryCreate} from "./components/category/CategoryCreate";
 import {CategoryEdit} from "./components/category/CategoryEdit";
 import {ProductList} from "./components/product/ProductList";
@@ -46,6 +47,9 @@ import {ColorEdit} from "./components/color/ColorEdit";
 import {SizeCreate} from "./components/size/SizeCreate";
 import {SizeEdit} from "./components/size/SizeEdit";
 import LogList from "./components/Log/LogList";
+import DiscountCodeList from "./components/DiscountCode/DiscountCodeList";
+import {DiscountCodeCreate} from "./components/DiscountCode/DiscountCodeCreate";
+import {DiscountCodeEdit} from "./components/DiscountCode/DiscountCodeEdit";
 
 
 function App() {
@@ -106,6 +110,13 @@ function App() {
                       icon={PromotionIcon}
                       show={PromotionShow}
                       options={{label: "Khuyến mãi"}}
+            />
+            <Resource name={'discount-code'}
+                      list={DiscountCodeList}
+                      create={DiscountCodeCreate}
+                      edit={DiscountCodeEdit}
+                      options={{label: "Mã khuyến mãi"}}
+                      icon={DiscountIcon}
             />
             <Resource name={'order'}
                       list={OrderList}
