@@ -46,7 +46,7 @@ export const ColorList = () => {
                         </>
                     }>
 
-                    <TextField source={'id'}/>
+                    <TextField source={'id'} label={'Mã màu'}/>
                     <TextField source={'name'} label={'Tên màu'}/>
                     <TextField source={'colorCode'} label={'Mã màu'}/>
                     <>

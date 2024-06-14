@@ -120,8 +120,8 @@ const ImportButton = () => {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={handleSubmit} color="primary">Confirm</Button>
+                    <Button onClick={handleClose} color="primary">Hủy</Button>
+                    <Button onClick={handleSubmit} color="primary">Xác nhận</Button>
                 </DialogActions>
             </Dialog>
         </>
