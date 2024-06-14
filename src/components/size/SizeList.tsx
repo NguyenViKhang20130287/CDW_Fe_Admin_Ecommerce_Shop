@@ -46,7 +46,7 @@ export const SizeList = () => {
                         </>
                     }>
 
-                    <TextField source={'id'}/>
+                    <TextField source={'id'} label={'Mã size'}/>
                     <TextField source={'name'} label={'Tên kích cỡ'}/>
                     <>
                         <EditButton sx={{marginRight: "30px"}}/>
