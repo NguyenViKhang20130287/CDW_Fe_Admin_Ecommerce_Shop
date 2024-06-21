@@ -21,7 +21,7 @@ const BestSeller = (products: any) => {
             <FixedSizeList
                 height={880}
                 itemCount={products.products.length}
-                itemSize={60}
+                itemSize={80}
                 width="100%"
                 style={{ listStyle: 'none', padding: 0 }}
             >

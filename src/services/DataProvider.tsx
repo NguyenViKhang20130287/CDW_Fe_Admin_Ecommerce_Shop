@@ -78,7 +78,10 @@ export const dataProvider: DataProvider = {
             const {page, perPage} = params.pagination;
             const {field, order} = params.sort;
             const query = {
-                filter: JSON.stringify(fetchUtils.flattenObject(params.filter)),
+                filter: JSON.stringify({
+                    ...fetchUtils.flattenObject(params.filter),
+                    isDeleted: false
+                }),
                 sort: field,
                 order: order,
                 page: page - 1,

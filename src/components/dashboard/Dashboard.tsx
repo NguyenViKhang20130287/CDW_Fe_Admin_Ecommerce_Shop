@@ -276,9 +276,6 @@ const DashBoard = () => {
                 </div>
                 <div style={styles.fullCol}>
                     <div style={styles.leftCol}>
-                        {/*<div style={styles.singleCol}>*/}
-                        {/*    <OrderPieChart orders={orders}/>*/}
-                        {/*</div>*/}
                         <div style={styles.singleCol}>
                             <BestSeller products={bestSeller}/>
                         </div>
