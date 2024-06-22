@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useMediaQuery, Theme} from "@mui/material";
 import {
     DeleteButton,
@@ -15,15 +15,30 @@ import {
 } from "react-admin";
 import {Size} from "../../types";
 
-const VisitorListActions = () => (
-    <TopToolbar>
-        <CreateButton/>
-        <SelectColumnsButton/>
-        <ExportButton/>
-    </TopToolbar>
-);
+// const permission = localStorage.getItem("permission")
+
+const VisitorListActions = () => {
+        const [permission, setPermission] = useState(localStorage.getItem('permission'))
+        useEffect(() => {
+
+        }, [permission]);
+        return (
+            <TopToolbar>
+                {(permission === 'ADMIN' || permission === 'PRODUCT_MANAGER') &&
+                    <CreateButton/>
+                }
+                <SelectColumnsButton/>
+                <ExportButton/>
+            </TopToolbar>
+        )
+    }
+;
 export const SizeList = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('sm'));
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
+
+    }, [permission]);
     return (
         <List
             filters={undefined}
@@ -49,8 +64,12 @@ export const SizeList = () => {
                     <TextField source={'id'}/>
                     <TextField source={'name'} label={'Tên kích cỡ'}/>
                     <>
-                        <EditButton sx={{marginRight: "30px"}}/>
-                        <DeleteButton/>
+                        {(permission === 'ADMIN' || permission === 'PRODUCT_MANAGER') &&
+                            <>
+                                <EditButton sx={{marginRight: "30px"}}/>
+                                <DeleteButton/>
+                            </>
+                        }
                     </>
                 </DatagridConfigurable>
             )}

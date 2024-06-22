@@ -7,7 +7,7 @@ import {
     TextField,
     TopToolbar, useDataProvider, useNotify, useRefresh
 } from "react-admin";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {OrderListAside} from "./OrderListAside";
 import {Button} from "@mui/material";
 import {addLog} from "../../services/DataProvider";
@@ -29,9 +29,14 @@ const ApproveButton: React.FC<{ record: any }> = ({record}) => {
                 notify(`Error: ${error.message}`, {type: 'warning'});
             });
     };
-    return (record.deliveryStatus.id === 1 || record.deliveryStatus.id === 10) ? <Button onClick={handleClick}>Xác Nhận</Button> : <TextField source={'deliveryStatus.description'}/>
+    return (record.deliveryStatus.id === 1 || record.deliveryStatus.id === 10) ?
+        <Button onClick={handleClick}>Xác Nhận</Button> : <TextField source={'deliveryStatus.description'}/>
 };
 const OrderList = (props: any) => {
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
+
+    }, [permission]);
     const VisitorListActions = () => (
         <TopToolbar>
             <SelectColumnsButton/>
@@ -73,7 +78,9 @@ const OrderList = (props: any) => {
                     )}
                 />
                 <ShowButton label={'Xem'}/>
-                <DeleteButton label={'Xóa'}/>
+                {(permission === 'ADMIN' || permission === 'ORDER_MANAGER') &&
+                    <DeleteButton label={'Xóa'}/>
+                }
             </DatagridConfigurable>
         </List>
     )

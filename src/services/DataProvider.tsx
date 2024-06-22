@@ -1,15 +1,18 @@
-import {DataProvider, fetchUtils, useNotify} from 'react-admin'
+import {DataProvider, fetchUtils, HttpError, useNotify, useRedirect} from 'react-admin'
 import {cloneFile} from "./config";
 import {imgProvider} from "../imgProvider/imageUrl";
 import axios from "axios";
 import {useEffect} from "react";
+import {rejects} from "node:assert";
 
 const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
 
+// const permission = localStorage.getItem("permission")
+
 export async function addLog(action: string) {
-    const token: any = localStorage.getItem("auth")
     try {
+        const token: any = localStorage.getItem("auth")
         const res = await axios.post(apiUrl + "/log/", null,
             {
                 params: {
@@ -18,6 +21,7 @@ export async function addLog(action: string) {
                 }
             })
         console.log('Response log: ', res)
+        return res.data
     } catch (e) {
         console.log('Err add log: ', e)
     }
@@ -72,7 +76,8 @@ export async function getUserByToken() {
 }
 
 export const dataProvider: DataProvider = {
-// @ts-ignore
+
+    // @ts-ignore
     getList: async (resource: any, params: any) => {
         try {
             const {page, perPage} = params.pagination;
@@ -103,7 +108,6 @@ export const dataProvider: DataProvider = {
         } catch (err: any) {
         }
     },
-
     getOne: async (resource: any, params: any) => {
         const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'GET',
@@ -165,6 +169,7 @@ export const dataProvider: DataProvider = {
     create: async (resource: any, params: any) => {
         console.log("param create ", params)
         const user = await getUserByToken();
+        const token: any = localStorage.getItem("auth")
         console.log("user", user)
         try {
             if (resource === 'user') {
@@ -189,6 +194,11 @@ export const dataProvider: DataProvider = {
                 // console.log('Params: ', params)
                 const {json} = await httpClient(`${apiUrl}/${resource}`, {
                     method: 'POST',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    }),
                     body: formData,
                     credentials: 'include'
                 });
@@ -196,7 +206,7 @@ export const dataProvider: DataProvider = {
                 window.location.href = `/#/${resource}`;
                 return Promise.resolve({data: json});
             }
-            if (resource === 'discount-code'){
+            if (resource === 'discount-code') {
                 const param = {...params.data, token: localStorage.getItem("auth")}
                 // console.log('Params create discount: ', param.token)
                 const {json} = await httpClient(`${apiUrl}/${resource}`, {
@@ -210,6 +220,7 @@ export const dataProvider: DataProvider = {
             }
         } catch (e) {
             console.log('err', e)
+            return Promise.reject(new Error('Không đủ quyền hạng để thực hiện'));
         }
 
         //
@@ -265,6 +276,7 @@ export const dataProvider: DataProvider = {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
                 credentials: 'include'
             })
@@ -290,6 +302,7 @@ export const dataProvider: DataProvider = {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
                 credentials: 'include'
             })
@@ -314,6 +327,7 @@ export const dataProvider: DataProvider = {
                 body: JSON.stringify({...params.data, link: thumbnail, createdBy: user, updatedBy: user}),
                 headers: new Headers({
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                     Accept: 'application/json',
                 }),
                 credentials: 'include'
@@ -341,19 +355,11 @@ export const dataProvider: DataProvider = {
             return Promise.resolve({data: json});
         }
 
-    }
-    //     catch(error: any) {
-    //         if (error.status === 401) {
-    //             // @ts-ignore
-    //             authProvider.logout().then(r => console.log(r));
-    //             window.location.href = '/#/login';
-    //         }
-    //     }
-    // }
-    ,
+    },
     update: async (resource: any, params: any) => {
         const user = await getUserByToken();
         let thumbnail = null;
+        const token: any = localStorage.getItem("auth")
         let imageProducts = [];
         console.log(" updated params: ", params)
         let category = null;
@@ -361,56 +367,64 @@ export const dataProvider: DataProvider = {
         //
         if (resource === 'user') {
             console.log('Params user: ', params)
-            const formData = new FormData();
-            if (typeof params.data.avatar.src !== 'undefined') {
-                const avt = cloneFile(params.data.avatar.src.rawFile,
-                    params.data.avatar.src.rawFile.name);
-                // @ts-ignore
-                console.log('Avatar: ', JSON.parse(await getImageUrl(avt)))
+            let avatarLink
+            try {
+                if (typeof params.data.avatar.src !== 'undefined') {
+                    const avt = cloneFile(params.data.avatar.src.rawFile,
+                        params.data.avatar.src.rawFile.name);
+                    // @ts-ignore
+                    avatarLink = JSON.parse(await getImageUrl(avt))
+                }
+                const bodyParams: any = {
+                    email: params.data.userInformation.email,
+                    fullName: params.data.userInformation.fullName,
+                    phone: params.data.userInformation.phone,
+                    permission: params.data.permission.id,
+                    status: params.data.status.toString(),
+                    avatarLink: avatarLink
+                }
+                const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                    method: 'PUT',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    }),
+                    body: JSON.stringify(bodyParams),
+                    credentials: 'include',
 
-                // @ts-ignore
-                formData.append('avatarLink', JSON.parse(await getImageUrl(avt)));
+                });
+                console.log('Response update: ', json)
+                if (json.statusCodeValue === 400) return Promise.reject(new Error('Lỗi thao tác'));
+                await addLog(`Sửa thông tin người dùng có username ${params.data.id}`)
+                // window.location.href = `/#/${resource}`;
+                return Promise.resolve({data: json});
+            } catch (e) {
+                window.location.href = `/#/${resource}/${params.id}`
+                return Promise.reject(new Error('Không đủ quyền hạng để thực hiện'));
             }
-            formData.append('username', params.data.username || '');
-            formData.append('email', params.data.userInformation.email || '');
-            formData.append('fullName', params.data.userInformation.fullName || '');
-            formData.append('address', params.data.userInformation.address || '');
-            formData.append('phone', params.data.userInformation.phone || '');
-            formData.append('permission', params.data.permission.id || '');
-            formData.append('status', params.data.status.toString() || '');
-
-            console.log('Form Data: ', formData);
-
-            if (formData.entries().next().done) {
-                console.error('FormData is empty');
-                return Promise.reject('FormData is empty');
-            }
-
-            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
-                method: 'PUT',
-                body: formData,
-                credentials: 'include'
-            });
-
-            await addLog(`Sửa thông tin người dùng có username ${params.data.id}`)
-            window.location.href = `/#/${resource}`;
-            return Promise.resolve({data: json});
         }
 
-        if (resource === 'discount-code'){
+        if (resource === 'discount-code') {
             try {
                 const param = {...params.data, token: localStorage.getItem("auth")}
+
                 console.log(param)
                 const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
                     method: 'PUT',
                     body: JSON.stringify(param),
+                    // headers: new Headers({
+                    //     'Content-Type': 'application/json',
+                    //     Accept: 'application/json',
+                    //     Authorization: `Bearer ${token}`,
+                    // }),
                     credentials: 'include'
                 });
 
                 await addLog(`Sửa thông tin mã giảm giá có id ${params.id}`)
                 window.location.href = `/#/${resource}`;
                 return Promise.resolve({data: json});
-            }catch (e) {
+            } catch (e) {
                 console.log(e)
             }
         }
@@ -445,6 +459,7 @@ export const dataProvider: DataProvider = {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
                 credentials: 'include'
             });
@@ -499,6 +514,7 @@ export const dataProvider: DataProvider = {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
                 credentials: 'include'
             })
@@ -526,6 +542,7 @@ export const dataProvider: DataProvider = {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
                 credentials: 'include'
             })
@@ -546,6 +563,7 @@ export const dataProvider: DataProvider = {
             headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
+                Authorization: `Bearer ${token}`,
             }),
             credentials: 'include'
         })
@@ -559,25 +577,24 @@ export const dataProvider: DataProvider = {
     updateMany:
         (resource: any, params: any) => Promise.resolve({data: []}),
 
-    delete:
-        async (resource: any, params: any) => {
+    delete: async (resource: any, params: any) => {
+        // console.log('Permission: ', permission)
+        try {
+            const token: any = localStorage.getItem("auth")
+            console.log('Stating delete...')
             const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
                 method: 'DELETE',
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
             });
-            switch (resource) {
-                case 'user':
-                    await addLog(`Xóa thông tin người dùng có id: ${params.id}`)
-                    break
-                case 'order':
-                    await addLog(`Xóa thông tin đơn hàng có id: ${params.id}`)
-                    break
-            }
             // console.log("Params: ", params)
             console.log("Data delete:", json)
             return {data: json};
-        },
+        } catch (e) {
+            return Promise.reject(new Error('Không đủ quyền hạng để thực hiện'));
+        }
+    },
 }

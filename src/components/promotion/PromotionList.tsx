@@ -20,22 +20,36 @@ import {
 } from "react-admin";
 import {Theme, useMediaQuery} from "@mui/material";
 import {PromotionAside} from "./PromotionAside";
+import {useEffect, useState} from "react";
 
 const visitorFilters = [
     <SearchInput alwaysOn name={"search"} source={"filter"}/>,
     <DateInput source="createdDate" name={"createdDate"}/>,
 ];
 
-const VisitorListActions = () => (
-    <TopToolbar>
-        <CreateButton/>
-        <SelectColumnsButton/>
-        <ExportButton/>
-    </TopToolbar>
-);
+const VisitorListActions = () => {
+        const [permission, setPermission] = useState(localStorage.getItem('permission'))
+        useEffect(() => {
+
+        }, [permission]);
+        return (
+            <TopToolbar>
+                {(permission === 'ADMIN' || permission === 'PROMOTION_MANAGER') &&
+                    <CreateButton/>
+                }
+                <SelectColumnsButton/>
+                <ExportButton/>
+            </TopToolbar>
+        )
+    }
+;
 
 export const PromotionList = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
+
+    }, [permission]);
     return (
         <List
             filters={isSmall ? visitorFilters : undefined}
@@ -52,13 +66,18 @@ export const PromotionList = () => {
                 <FunctionField
                     source={'discount_rate'}
                     label="Tỉ lệ"
-                    render={(record : any) => `${record.discount_rate}%`}
+                    render={(record: any) => `${record.discount_rate}%`}
                 />
                 <BooleanField source={'status'} label="Trạng thái"/>
                 <TextField source={'startDate'} label={"Ngày bắt đầu"}/>
                 <TextField source={'endDate'} label={"Ngày kết thúc"}/>
-                <EditButton sx={{marginRight: "30px"}}/>
-                <DeleteButton />
+                {(permission === 'ADMIN' || permission === 'PROMOTION_MANAGER') &&
+                    <>
+                        <EditButton sx={{marginRight: "30px"}}/>
+                        <DeleteButton/>
+                    </>
+                }
+
             </DatagridConfigurable>
 
         </List>)

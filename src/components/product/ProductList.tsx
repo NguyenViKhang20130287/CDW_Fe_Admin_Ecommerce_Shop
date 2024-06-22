@@ -19,22 +19,38 @@ import {
 } from "react-admin";
 import {Theme, useMediaQuery} from "@mui/material";
 import {ProductAside} from "./ProductAside";
+import {useEffect, useState} from "react";
+
+const permission: any = localStorage.getItem("permission")
 
 const visitorFilters = [
     <SearchInput alwaysOn name={"search"} source={"filter"}/>,
     <DateInput source="createdDate" name={"createdDate"}/>,
 ];
 
-const VisitorListActions = () => (
-    <TopToolbar>
-        <CreateButton/>
-        <SelectColumnsButton/>
-        <ExportButton/>
-    </TopToolbar>
-);
+const VisitorListActions = () => {
+        const [permission, setPermission] = useState(localStorage.getItem('permission'))
+        useEffect(() => {
+
+        }, [permission]);
+        return (
+            <TopToolbar>
+                {(permission === 'ADMIN' || permission === 'PRODUCT_MANAGER') &&
+                    <CreateButton/>
+                }
+                <SelectColumnsButton/>
+                <ExportButton/>
+            </TopToolbar>
+        )
+    }
+;
 
 export const ProductList = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
+
+    }, [permission]);
     return (
         <List
             filters={isSmall ? visitorFilters : undefined}
@@ -65,7 +81,9 @@ export const ProductList = () => {
                     }}
                     label="Giá"
                 />
-                <EditButton />
+                {(permission === 'ADMIN' || permission === 'PRODUCT_MANAGER') &&
+                    <EditButton/>
+                }
             </DatagridConfigurable>
 
         </List>)

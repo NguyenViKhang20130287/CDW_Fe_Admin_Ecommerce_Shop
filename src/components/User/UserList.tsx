@@ -15,9 +15,12 @@ import {UserListAside} from "./UserListAside";
 
 const UserList = (props: any) => {
 
+    const permission: any = localStorage.getItem("permission")
     const VisitorListActions = () => (
         <TopToolbar>
-            <CreateButton/>
+            {permission === 'ADMIN' &&
+                <CreateButton/>
+            }
             <SelectColumnsButton/>
             <ExportButton/>
         </TopToolbar>
@@ -31,18 +34,24 @@ const UserList = (props: any) => {
               actions={<VisitorListActions/>}
         >
             <DatagridConfigurable
-            rowClick={"show"}
+                rowClick={"show"}
             >
                 <TextField label={'ID'} source={'id'}/>
                 <TextField label={'Họ và Tên'} source={'userInformation.fullName'}/>
+                <TextField label={'Email'} source={'userInformation.email'}/>
                 <FunctionField
                     source="status"
                     label="Trạng thái"
-                    render={(record: {  status: boolean }) => record.status ? "Hoạt động" : "Đã khóa"}
+                    render={(record: { status: boolean }) => record.status ? "Hoạt động" : "Đã khóa"}
                 />
                 <TextField label={'Quyền'} source={`permission.name`}/>
-                <EditButton label={'Edit'} />
-                <DeleteButton label={'Delete'}/>
+                {permission === 'ADMIN' &&
+                    <EditButton label={'Edit'}/>
+                }
+                {permission === 'ADMIN' &&
+                    <DeleteButton label={'Delete'}/>
+                }
+
             </DatagridConfigurable>
         </List>
     )
