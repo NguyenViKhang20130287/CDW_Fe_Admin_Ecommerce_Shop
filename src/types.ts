@@ -93,7 +93,8 @@ export interface Blog extends RaRecord {
     createdAt: string,
     createdBy: User,
     updatedAt: string,
-    updatedBy: User
+    updatedBy: User,
+    isDeleted: boolean
 }
 
 export interface Order extends RaRecord {
