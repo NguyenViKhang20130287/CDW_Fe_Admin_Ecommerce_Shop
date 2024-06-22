@@ -43,7 +43,7 @@ export const BlogList = () => {
     return (
         <List
             filters={undefined}
-            sort={{field: 'createdAt', order: 'DESC'}}
+            sort={{field: 'id', order: 'ASC'}}
             perPage={25}
             aside={<BlogAside/>}
             actions={<VisitorListActions/>}

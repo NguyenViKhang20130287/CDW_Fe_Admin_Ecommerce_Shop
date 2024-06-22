@@ -53,7 +53,7 @@ export const PromotionList = () => {
     return (
         <List
             filters={isSmall ? visitorFilters : undefined}
-            sort={{field: 'name', order: 'DESC'}}
+            sort={{field: 'id', order: 'ASC'}}
             perPage={25}
             aside={<PromotionAside/>}
             actions={<VisitorListActions/>}
@@ -61,7 +61,8 @@ export const PromotionList = () => {
             <DatagridConfigurable
                 rowClick="show"
             >
-                <TextField source="name" label="Tên SP"/>
+                <TextField source="id" label="Mã KM"/>
+                <TextField source="name" label="Tên KM"/>
                 <TextField sx={{m: "auto"}} source="description" label="Mô tả"/>
                 <FunctionField
                     source={'discount_rate'}

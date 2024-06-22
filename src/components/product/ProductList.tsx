@@ -9,7 +9,6 @@ import {
 } from 'react-admin';
 
 import {
-    Datagrid,
     List,
     NumberField,
     ImageField,
@@ -69,6 +68,7 @@ export const ProductList = () => {
                     </>
                 }
             >
+                <TextField source="id" label="Mã SP"/>
                 <ImageField sx={{m: "auto"}} source="thumbnail" label="Ảnh"/>
                 <TextField source="name" label="Tên SP"/>
                 <ChipField source="category.name" label="Danh mục"/>

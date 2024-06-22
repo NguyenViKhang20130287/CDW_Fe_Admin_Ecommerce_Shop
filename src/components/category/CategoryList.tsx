@@ -42,7 +42,7 @@ export const CategoryList = () => {
     return (
         <List
             filters={undefined}
-            sort={{field: 'name', order: 'DESC'}}
+            sort={{field: 'id', order: 'ASC'}}
             perPage={25}
             aside={<CategoryAside/>}
             actions={<VisitorListActions/>}

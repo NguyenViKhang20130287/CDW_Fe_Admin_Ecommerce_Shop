@@ -3,12 +3,18 @@ import {Card, CardContent} from '@mui/material';
 import {
     FilterList,
     FilterListItem,
-    FilterLiveSearch
+    FilterLiveSearch, useGetList
 } from 'react-admin';
-
+import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
 import LockIcon from "@mui/icons-material/Lock";
+import CategoryIcon from '@mui/icons-material/CategoryRounded';
+import {Category} from "../../types";
 
 export const ProductAside = () => {
+    const {data} = useGetList<Category>('category', {
+        pagination: {page: 1, perPage: 100},
+        sort: {field: 'name', order: 'ASC'},
+    });
     return (
         <Card
             sx={{
@@ -42,6 +48,45 @@ export const ProductAside = () => {
                         }}
                     />
                 </FilterList>
+                <FilterList
+                    label="Giá"
+                    icon={<AttachMoneyRoundedIcon />}
+                >
+                    <FilterListItem
+                        label="0 - 99.000"
+                        value={{
+                            price_lt: 100000,
+                            price_gt: undefined,
+                        }}
+                    />
+                    <FilterListItem
+                        label="100.000 - 299.000"
+                        value={{
+                            price_lt: 300000,
+                            price_gt: 100000,
+                        }}
+                    />
+                    <FilterListItem
+                        label="300.000 trở lên"
+                        value={{
+                            price_lt: undefined,
+                            price_gt: 300000,
+                        }}
+                    />
+                </FilterList>
+                <FilterList
+                label="Danh mục"
+                icon={<CategoryIcon />}
+                >
+                {data &&
+                    data.map((record: any) => (
+                        <FilterListItem
+                            label={record.name}
+                            key={record.id}
+                            value={{categoryId: record.id}}
+                        />
+                    ))}
+            </FilterList>
             </CardContent>
         </Card>
     );
