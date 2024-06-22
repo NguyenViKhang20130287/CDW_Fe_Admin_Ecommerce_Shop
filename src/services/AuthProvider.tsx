@@ -52,20 +52,24 @@ export const authProvider: AuthProvider = {
         return Promise.resolve();
     },
     getPermissions(params: any): Promise<any> {
-        return Promise.resolve(undefined);
+        const permission = localStorage.getItem('permission')
+        return Promise.resolve(permission);
     },
     login: async ({username, password}: { username: string, password: string }) => {
         try {
             const response = await axios.post('http://localhost:8080/api/v1/auth/login', {username, password});
             const res = response.data.body;
+            console.log('Response login: ', response)
             const token = res.token;
             console.log('Token login: ', token)
             const permission = res.permission;
+            console.log('Permission login: ', permission)
             if (!token) {
                 throw new Error('Phiên đăng nhập đã hết hạn !');
             }
-            if (permission === 'ADMIN') {
+            if (permission === 'ADMIN' || permission === 'PRODUCT_MANAGER' || permission === 'ORDER_MANAGER' || permission === 'PROMOTION_MANAGER') {
                 localStorage.setItem('auth', token);
+                localStorage.setItem("permission", permission)
             } else
                 throw new Error('Tài khoản không có quyền hạng để đăng nhập vào hệ thống !.');
         } catch (err) {
@@ -74,6 +78,7 @@ export const authProvider: AuthProvider = {
     },
     logout(params: any): Promise<void | false | string> {
         localStorage.removeItem('auth');
+        localStorage.removeItem("permission")
         return Promise.resolve();
     }
 }
