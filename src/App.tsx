@@ -56,6 +56,28 @@ import DiscountCodeList from "./components/DiscountCode/DiscountCodeList";
 import {DiscountCodeCreate} from "./components/DiscountCode/DiscountCodeCreate";
 import {DiscountCodeEdit} from "./components/DiscountCode/DiscountCodeEdit";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyDyjVbXr-DvHTyVplN4POQk16xJQ0CfYOY",
+    authDomain: "teelab-admin-v2.firebaseapp.com",
+    projectId: "teelab-admin-v2",
+    storageBucket: "teelab-admin-v2.appspot.com",
+    messagingSenderId: "511278677449",
+    appId: "1:511278677449:web:58d1b0ddbc7390ae31bc18",
+    measurementId: "G-GNDCCZPNFN"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 function App() {
     // const permissions = usePermissions()
     // console.log('Permission: ', permissions)
