@@ -171,26 +171,24 @@ export const dataProvider: DataProvider = {
         const user = await getUserByToken();
         const token: any = localStorage.getItem("auth")
         console.log("user", user)
+        let avatarLink
         try {
             if (resource === 'user') {
-                const formData = new FormData();
                 if (params.data.avatar && params.data.avatar.src && params.data.avatar.src.rawFile) {
                     const avt = cloneFile(params.data.avatar.src.rawFile, params.data.avatar.src.rawFile.name);
                     // @ts-ignore
-                    formData.append('avatarLink', JSON.parse(await getImageUrl(avt)));
+                    avatarLink = JSON.parse(await getImageUrl(avt))
                 }
-                formData.append('username', params.data.username || '');
-                formData.append('email', params.data.email || '');
-                formData.append('fullName', params.data.fullName || '');
-                formData.append('phone', params.data.phone || '');
-                formData.append('permission', params.data.permission || '');
 
-                console.log('Form Data: ', formData);
-
-                if (formData.entries().next().done) {
-                    console.error('FormData is empty');
-                    return Promise.reject('FormData is empty');
+                const bodyParams: any = {
+                    username: params.data.username,
+                    email: params.data.email,
+                    fullName: params.data.fullName,
+                    phone: params.data.phone,
+                    permission: params.data.permission,
+                    avatarLink: avatarLink
                 }
+                console.log('Params body: ', bodyParams)
                 // console.log('Params: ', params)
                 const {json} = await httpClient(`${apiUrl}/${resource}`, {
                     method: 'POST',
@@ -199,10 +197,10 @@ export const dataProvider: DataProvider = {
                         Accept: 'application/json',
                         Authorization: `Bearer ${token}`,
                     }),
-                    body: formData,
+                    body: JSON.stringify(bodyParams),
                     credentials: 'include'
                 });
-                await addLog(`Thêm nguời dùng mới có username: ${formData.get("username")}`)
+                await addLog(`Thêm nguời dùng mới có username: ${bodyParams.username}`)
                 window.location.href = `/#/${resource}`;
                 return Promise.resolve({data: json});
             }
@@ -255,14 +253,16 @@ export const dataProvider: DataProvider = {
                 const {data: size} = await dataProvider.getOne('size', {id: item.size});
                 return {
                     ...item,
-                    color,
-                    size,
+                    color: color,
+                    size: size,
                 };
             }));
             const {data: category} = await dataProvider.getOne('category', {id: params.data.category});
             params.data.category = category;
             params.data.createdBy = user;
             params.data.updatedBy = user;
+
+            console.log('Params create product: ', params)
             const {json} = await httpClient(`${apiUrl}/${resource}`, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -347,6 +347,7 @@ export const dataProvider: DataProvider = {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
                 credentials: 'include'
             })
@@ -487,6 +488,7 @@ export const dataProvider: DataProvider = {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
                 }),
                 credentials: 'include'
             });
