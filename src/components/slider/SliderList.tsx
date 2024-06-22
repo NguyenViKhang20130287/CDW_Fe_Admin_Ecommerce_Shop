@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useMediaQuery, Theme} from "@mui/material";
 import {
     DeleteButton,
@@ -17,15 +17,28 @@ import {
 import {Slider} from "../../types";
 import SliderAside from "./SliderAside";
 
-const VisitorListActions = () => (
-    <TopToolbar>
-        <CreateButton/>
-        <SelectColumnsButton/>
-        <ExportButton/>
-    </TopToolbar>
-);
+const VisitorListActions = () => {
+        const [permission, setPermission] = useState(localStorage.getItem('permission'))
+        useEffect(() => {
+
+        }, [permission]);
+        return (
+            <TopToolbar>
+                {(permission === 'ADMIN' || permission === 'PROMOTION_MANAGER') &&
+                    <CreateButton/>
+                }
+                <SelectColumnsButton/>
+                <ExportButton/>
+            </TopToolbar>
+        )
+    }
+;
 export const SliderList = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('sm'));
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
+
+    }, [permission]);
     return (
         <List
             filters={undefined}
@@ -55,10 +68,12 @@ export const SliderList = () => {
                     <TextField source={'description'} label={'Mô tả'}/>
                     <BooleanField source={'status'} label="Trạng thái"/>
                     <TextField source={'createdAt'} label={'Ngày tạo'}/>
-                    <>
-                        <EditButton sx={{marginRight: "30px"}}/>
-                        <DeleteButton/>
-                    </>
+                    {(permission === 'ADMIN' || permission === 'PROMOTION_MANAGER') &&
+                        <>
+                            <EditButton sx={{marginRight: "30px"}}/>
+                            <DeleteButton/>
+                        </>
+                    }
                 </DatagridConfigurable>
             )}
         </List>

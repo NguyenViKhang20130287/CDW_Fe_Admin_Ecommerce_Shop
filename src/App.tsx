@@ -1,5 +1,5 @@
 import React from 'react';
-import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource} from "react-admin";
+import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource, usePermissions} from "react-admin";
 import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
 import CategoryList from "./components/category/CategoryList";
@@ -56,8 +56,9 @@ import DiscountCodeList from "./components/DiscountCode/DiscountCodeList";
 import {DiscountCodeCreate} from "./components/DiscountCode/DiscountCodeCreate";
 import {DiscountCodeEdit} from "./components/DiscountCode/DiscountCodeEdit";
 
-
 function App() {
+    // const permissions = usePermissions()
+    // console.log('Permission: ', permissions)
     return (
         <Admin
             dashboard={Dashboard}
@@ -69,6 +70,8 @@ function App() {
             authProvider={authProvider}
             loginPage={Login}
         >
+            {/*{permission === 'ADMIN' ?*/}
+            {/*<>*/}
             <Resource name={'user'}
                       list={UserList}
                       create={UserCreate}
@@ -161,6 +164,11 @@ function App() {
                       icon={SlideshowRoundedIcon}
                       options={{label: "Slider trang chủ"}}
             />
+            {/*</>*/}
+            {/*    :*/}
+            {/*    <>No permission</>*/}
+            {/*}*/}
+
 
         </Admin>
     );

@@ -1,31 +1,45 @@
-import React from "react";
-import {useMediaQuery, Theme} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {Theme, useMediaQuery} from "@mui/material";
 import {
-    DeleteButton,
+    BooleanField,
     BulkDeleteButton,
     BulkUpdateButton,
-    List,
-    TextField,
-    DatagridConfigurable,
-    TopToolbar,
-    BooleanField,
     CreateButton,
-    SelectColumnsButton,
+    DatagridConfigurable,
+    DeleteButton,
     ExportButton,
-    SimpleList, ImageField
+    ImageField,
+    List,
+    SelectColumnsButton,
+    SimpleList,
+    TextField,
+    TopToolbar
 } from "react-admin";
 import BlogAside from "./BlogAside";
 import {Blog} from "../../types";
 
-const VisitorListActions = () => (
-    <TopToolbar>
-        <CreateButton/>
-        <SelectColumnsButton/>
-        <ExportButton/>
-    </TopToolbar>
-);
+const VisitorListActions = () => {
+        const [permission, setPermission] = useState(localStorage.getItem('permission'))
+        useEffect(() => {
+
+        }, [permission]);
+        return (
+            <TopToolbar>
+                {(permission === 'ADMIN' || permission === 'PRODUCT_MANAGER') &&
+                    <CreateButton/>
+                }
+                <SelectColumnsButton/>
+                <ExportButton/>
+            </TopToolbar>
+        )
+    }
+;
 export const BlogList = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('sm'));
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
+
+    }, [permission]);
     return (
         <List
             filters={undefined}
@@ -56,7 +70,9 @@ export const BlogList = () => {
                     <BooleanField source={'status'} label="Trạng thái"/>
                     <TextField source={'createdAt'} label={'Ngày tạo'}/>
                     <>
-                        <DeleteButton/>
+                        {permission === 'ADMIN' &&
+                            <DeleteButton/>
+                        }
                     </>
                 </DatagridConfigurable>
             )}

@@ -9,19 +9,28 @@ import {
     TextField,
     TopToolbar
 } from "react-admin";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import moment from 'moment/moment'
 
-const DiscountCodeList = ()=> {
-    const VisitorListActions = () => (
-        <TopToolbar>
-            <CreateButton/>
-            <SelectColumnsButton/>
-            <ExportButton/>
-        </TopToolbar>
-    );
+const DiscountCodeList = () => {
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
 
-    return(
+    }, [permission]);
+    const VisitorListActions = () => {
+            return (
+                <TopToolbar>
+                    {(permission === 'ADMIN' || permission === 'PROMOTION_MANAGER') &&
+                        <CreateButton/>
+                    }
+                    <SelectColumnsButton/>
+                    <ExportButton/>
+                </TopToolbar>
+            )
+        }
+    ;
+
+    return (
         <List
             actions={<VisitorListActions/>}
         >
@@ -30,17 +39,22 @@ const DiscountCodeList = ()=> {
                 <TextField label={'Code'} source={'code'}/>
                 <FunctionField
                     label={'Ưu đãi'}
-                    render={(record:any) => record.discountRate === 0 ?
-                        record.discountMoney.toLocaleString('vn-Vi')+'đ' : record.discountRate+'%'}/>
+                    render={(record: any) => record.discountRate === 0 ?
+                        record.discountMoney.toLocaleString('vn-Vi') + 'đ' : record.discountRate + '%'}/>
                 <DateField source={'startDate'} label={'Ngày bắt đầu'} showTime/>
                 <DateField source={'endDate'} label={'Ngày kết thúc'} showTime/>
                 <NumberField label={'Số lượng'} source={'quantity'}/>
                 <FunctionField
                     source={'Trạng thái'}
-                    render={(record:any) => record.status ? 'Hoạt động' : 'Không hoạt động'}/>
+                    render={(record: any) => record.status ? 'Hoạt động' : 'Không hoạt động'}/>
                 <DateField source={'createdAt'} label={'Ngày tạo'} showTime/>
-                <EditButton/>
-                <DeleteButton/>
+                {(permission === 'ADMIN' || permission === 'PROMOTION_MANAGER') &&
+                    <>
+                        <EditButton/>
+                        <DeleteButton/>
+                    </>
+                }
+
             </DatagridConfigurable>
         </List>
     )

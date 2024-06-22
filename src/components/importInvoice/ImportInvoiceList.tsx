@@ -16,16 +16,38 @@ import {
 } from 'react-admin';
 import ImportButton from "./ImportButton";
 import ImportInvoiceShow from "./ImportInvoiceShow";
+import {useEffect, useState} from "react";
 
-const ListActions = () => (
-    <TopToolbar>
-        <ImportButton/>
-        <CreateButton label={'Nhập hàng thủ công'}/>
-        <SelectColumnsButton/>
-        <FilterButton/>
-        <ExportButton label={"Xuất File"}/>
-    </TopToolbar>
-);
+// const ListActions = () => (
+//     <TopToolbar>
+//         <ImportButton/>
+//         <CreateButton label={'Nhập hàng thủ công'}/>
+//         <SelectColumnsButton/>
+//         <FilterButton/>
+//         <ExportButton label={"Xuất File"}/>
+//     </TopToolbar>
+// );
+
+const ListActions = () => {
+        const [permission, setPermission] = useState(localStorage.getItem('permission'))
+        useEffect(() => {
+
+        }, [permission]);
+        return (
+            <TopToolbar>
+                {(permission === 'ADMIN' || permission === 'PRODUCT_MANAGER') &&
+                    <>
+                        <ImportButton/>
+                        <CreateButton label={'Nhập hàng thủ công'}/>
+                    </>
+                }
+                <SelectColumnsButton/>
+                <FilterButton/>
+                <ExportButton label={"Xuất File"}/>
+            </TopToolbar>
+        )
+    }
+;
 
 const postFilters = [
     <TextInput sx={{marginLeft: '20px'}} label="Tìm kiếm..." source="q" alwaysOn/>,
@@ -33,6 +55,10 @@ const postFilters = [
 
 const ImportInvoiceList = () => {
     const {data, isLoading}: any = useListController();
+    const [permission, setPermission] = useState(localStorage.getItem('permission'))
+    useEffect(() => {
+
+    }, [permission]);
 
     if (isLoading) return null;
 
