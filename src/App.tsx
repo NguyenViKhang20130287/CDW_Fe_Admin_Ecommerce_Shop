@@ -1,5 +1,5 @@
 import React from 'react';
-import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource, usePermissions} from "react-admin";
+import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource} from "react-admin";
 import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
 import CategoryList from "./components/category/CategoryList";
@@ -59,6 +59,7 @@ import {DiscountCodeEdit} from "./components/DiscountCode/DiscountCodeEdit";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import {OrderEdit} from "./components/Order/OrderEdit";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -91,6 +92,7 @@ function App() {
             disableTelemetry
             authProvider={authProvider}
             loginPage={Login}
+            // layout={Layout}
         >
             {/*{permission === 'ADMIN' ?*/}
             {/*<>*/}
@@ -153,6 +155,7 @@ function App() {
                       options={{label: "Đơn hàng"}}
                       icon={ReceiptRoundedIcon}
                       show={OrderShow}
+                      edit={OrderEdit}
             />
             <Resource name={'warehouse'}
                       list={ImportInvoiceList}

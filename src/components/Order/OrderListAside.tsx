@@ -5,7 +5,7 @@ import PaidIcon from '@mui/icons-material/Paid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PaymentIcon from '@mui/icons-material/Payment';
 
-export const OrderListAside = (props:any) =>{
+export const OrderListAside = (props: any) => {
     return (
         <Card
             sx={{
@@ -30,6 +30,10 @@ export const OrderListAside = (props:any) =>{
                     <FilterListItem label={'COD'} value={{paymentMethod: 'COD'}}/>
                     <FilterListItem label={'VNPAY'} value={{paymentMethod: 'VNPAY'}}/>
                 </FilterList>
+                {/*<FilterList label={'Trạng thái'} icon={<PaidIcon/>}>*/}
+                {/*    <FilterListItem label={'Hiện'} value={{isDeleted: false}}/>*/}
+                {/*    <FilterListItem label={'Ẩn'} value={{isDeleted: true}}/>*/}
+                {/*</FilterList>*/}
             </CardContent>
         </Card>
     )

@@ -29,7 +29,7 @@ const ApproveButton: React.FC<{ record: any }> = ({record}) => {
                 notify(`Error: ${error.message}`, {type: 'warning'});
             });
     };
-    return (record.deliveryStatus.id === 1 || record.deliveryStatus.id === 10) ?
+    return (record.deliveryStatus.name === 'Pending' || record.deliveryStatus.name === 'Paid') ?
         <Button onClick={handleClick}>Xác Nhận</Button> : <TextField source={'deliveryStatus.description'}/>
 };
 const OrderList = (props: any) => {
@@ -63,8 +63,11 @@ const OrderList = (props: any) => {
                 <FunctionField
                     source="paymentStatus"
                     label="Trạng thái thanh toán"
-                    render={(record: { status: boolean }) => record.status ? "Đã thanh toán" : "Chưa thanh toán"}
+                    render={(record: {
+                        paymentStatus: boolean
+                    }) => record.paymentStatus ? "Đã thanh toán" : "Chưa thanh toán"}
                 />
+                <TextField label={'Trạng thái đơn hàng'} source={'deliveryStatus.description'}/>
                 <FunctionField
                     source="totalAmount"
                     label="Số Tiền"
@@ -79,7 +82,11 @@ const OrderList = (props: any) => {
                 />
                 <ShowButton label={'Xem'}/>
                 {(permission === 'ADMIN' || permission === 'ORDER_MANAGER') &&
-                    <DeleteButton label={'Xóa'}/>
+                    <>
+                        <EditButton label={'Sửa'}/>
+
+                        <DeleteButton label={'Xóa'}/>
+                    </>
                 }
             </DatagridConfigurable>
         </List>
