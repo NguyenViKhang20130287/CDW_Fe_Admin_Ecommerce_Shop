@@ -8,7 +8,7 @@ export const UserCreate = (props: any) => {
 
     const fetchDataPermission = async () => {
         try {
-            const res = await axios.get("http://localhost:8080/api/v1/permission/")
+            const res = await axios.get("https://teelab-be.up.railway.app/api/v1/permission/")
             setPermissions(res.data)
         } catch (e) {
             console.log('Err fetch data permisson: ', e)

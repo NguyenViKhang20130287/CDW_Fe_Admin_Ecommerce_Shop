@@ -19,7 +19,7 @@ export const authProvider: AuthProvider = {
         // console.log('Token check: ', token)
         if (token) {
             try {
-                const res = await axios.post("http://localhost:8080/api/v1/auth/check-expired", null,
+                const res = await axios.post("https://teelab-be.up.railway.app/api/v1/auth/check-expired", null,
                     {
                         params: {
                             token: token
@@ -57,7 +57,10 @@ export const authProvider: AuthProvider = {
     },
     login: async ({username, password}: { username: string, password: string }) => {
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/auth/login', {username, password});
+            const response = await axios.post('https://teelab-be.up.railway.app/api/v1/auth/login', {
+                username,
+                password
+            });
             const res = response.data.body;
             console.log('Response login: ', response)
             const token = res.token;
@@ -80,5 +83,24 @@ export const authProvider: AuthProvider = {
         localStorage.removeItem('auth');
         localStorage.removeItem("permission")
         return Promise.resolve();
-    }
+    },
+    getIdentity: async () => {
+        try {
+            const token = localStorage.getItem('auth')
+            const res = await axios.get("https://teelab-be.up.railway.app/api/v1/user/user-details", {
+                params: {
+                    token: token
+                }
+            })
+            console.log('Response identity: ', res)
+            let {id, fullName, avatar} = res.data;
+            fullName = res.data.userInformation.fullName
+            avatar = res.data.userInformation.avatar
+            console.log('Data: ', {id, fullName, avatar})
+            return Promise.resolve({id, fullName, avatar});
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
 }

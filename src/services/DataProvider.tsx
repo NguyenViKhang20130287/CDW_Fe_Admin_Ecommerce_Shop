@@ -5,7 +5,7 @@ import axios from "axios";
 import {useEffect} from "react";
 import {rejects} from "node:assert";
 
-const apiUrl = 'http://localhost:8080/api/v1'
+const apiUrl = 'https://teelab-be.up.railway.app/api/v1'
 const httpClient = fetchUtils.fetchJson
 
 // const permission = localStorage.getItem("permission")
@@ -409,6 +409,23 @@ export const dataProvider: DataProvider = {
             }
         }
 
+        if(resource === 'order/confirm'){
+            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                method: 'PUT',
+                body: JSON.stringify(params),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                }),
+                credentials: 'include'
+            });
+
+            await addLog(`Sửa thông tin mã giảm giá có id ${params.id}`)
+            window.location.href = `/#/${resource}`;
+            return Promise.resolve({data: json});
+        }
+
         if (resource === 'discount-code') {
             try {
                 const param = {...params.data, token: localStorage.getItem("auth")}
@@ -417,11 +434,11 @@ export const dataProvider: DataProvider = {
                 const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
                     method: 'PUT',
                     body: JSON.stringify(param),
-                    // headers: new Headers({
-                    //     'Content-Type': 'application/json',
-                    //     Accept: 'application/json',
-                    //     Authorization: `Bearer ${token}`,
-                    // }),
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    }),
                     credentials: 'include'
                 });
 

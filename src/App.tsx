@@ -1,5 +1,5 @@
 import React from 'react';
-import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource, usePermissions} from "react-admin";
+import {Admin, Login, radiantLightTheme, radiantDarkTheme, Resource} from "react-admin";
 import UserList from "./components/User/UserList";
 import {dataProvider} from "./services/DataProvider";
 import CategoryList from "./components/category/CategoryList";
@@ -91,6 +91,7 @@ function App() {
             disableTelemetry
             authProvider={authProvider}
             loginPage={Login}
+            // layout={Layout}
         >
             {/*{permission === 'ADMIN' ?*/}
             {/*<>*/}
