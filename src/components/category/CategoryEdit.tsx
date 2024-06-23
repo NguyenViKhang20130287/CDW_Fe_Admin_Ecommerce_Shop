@@ -49,8 +49,8 @@ export const CategoryEdit = (props: SelectArrayInputProps) => {
                                 },
                             }}
                         >
-                            <ThumbnailField source="thumbnail" label="" />
-                            <TextField source="name" />
+                            <ThumbnailField source="thumbnail" label="Ảnh" />
+                            <TextField source="name" label={"Tên sản phẩm"} />
                             <NumberField
                                 source="price"
                                 options={{
@@ -59,8 +59,7 @@ export const CategoryEdit = (props: SelectArrayInputProps) => {
                                 }}
                                 label="Giá"
                             />
-                            <NumberField source="quantity" />
-                            <NumberField source="sold" />
+                            <NumberField source="quantity" label={"Số lượng"} />
                             <EditButton />
                         </Datagrid>
                     </ReferenceManyField>
