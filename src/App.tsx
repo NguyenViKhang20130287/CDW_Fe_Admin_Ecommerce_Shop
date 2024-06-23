@@ -59,6 +59,7 @@ import {DiscountCodeEdit} from "./components/DiscountCode/DiscountCodeEdit";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import {OrderEdit} from "./components/Order/OrderEdit";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -154,6 +155,7 @@ function App() {
                       options={{label: "Đơn hàng"}}
                       icon={ReceiptRoundedIcon}
                       show={OrderShow}
+                      edit={OrderEdit}
             />
             <Resource name={'warehouse'}
                       list={ImportInvoiceList}

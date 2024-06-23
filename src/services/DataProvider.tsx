@@ -5,7 +5,7 @@ import axios from "axios";
 import {useEffect} from "react";
 import {rejects} from "node:assert";
 
-const apiUrl = 'https://teelab-be.up.railway.app/api/v1'
+const apiUrl = 'http://localhost:8080/api/v1'
 const httpClient = fetchUtils.fetchJson
 
 // const permission = localStorage.getItem("permission")
@@ -407,6 +407,28 @@ export const dataProvider: DataProvider = {
                 window.location.href = `/#/${resource}/${params.id}`
                 return Promise.reject(new Error('Không đủ quyền hạng để thực hiện'));
             }
+        }
+
+        if (resource === 'order'){
+            console.log('params order: ', params)
+            const bodyParams = {
+                deliveryId: params.data.deliveryStatus.id
+            }
+            console.log('Body params order: ', bodyParams)
+            const {json} = await httpClient(`${apiUrl}/${resource}/${params.id}`, {
+                method: 'PUT',
+                body: JSON.stringify(bodyParams),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                }),
+                credentials: 'include'
+            });
+
+            await addLog(`Sửa thông tin đơn hàng có id ${params.id}`)
+            window.location.href = `/#/${resource}`;
+            return Promise.resolve({data: json});
         }
 
         if(resource === 'order/confirm'){

@@ -63,7 +63,9 @@ const OrderList = (props: any) => {
                 <FunctionField
                     source="paymentStatus"
                     label="Trạng thái thanh toán"
-                    render={(record: { paymentStatus: boolean }) => record.paymentStatus ? "Đã thanh toán" : "Chưa thanh toán"}
+                    render={(record: {
+                        paymentStatus: boolean
+                    }) => record.paymentStatus ? "Đã thanh toán" : "Chưa thanh toán"}
                 />
                 <TextField label={'Trạng thái đơn hàng'} source={'deliveryStatus.description'}/>
                 <FunctionField
@@ -80,7 +82,11 @@ const OrderList = (props: any) => {
                 />
                 <ShowButton label={'Xem'}/>
                 {(permission === 'ADMIN' || permission === 'ORDER_MANAGER') &&
-                    <DeleteButton label={'Xóa'}/>
+                    <>
+                        <EditButton label={'Sửa'}/>
+
+                        <DeleteButton label={'Xóa'}/>
+                    </>
                 }
             </DatagridConfigurable>
         </List>
