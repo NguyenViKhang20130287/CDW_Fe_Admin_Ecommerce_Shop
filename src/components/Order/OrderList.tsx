@@ -29,7 +29,7 @@ const ApproveButton: React.FC<{ record: any }> = ({record}) => {
                 notify(`Error: ${error.message}`, {type: 'warning'});
             });
     };
-    return (record.deliveryStatus.name === 'Pending' || record.deliveryStatus.name === 'Paid') ?
+    return (record.deliveryStatus.name === 'Pending') ?
         <Button onClick={handleClick}>Xác Nhận</Button> : <TextField source={'deliveryStatus.description'}/>
 };
 const OrderList = (props: any) => {

@@ -25,15 +25,14 @@ export const OrderListAside = (props: any) => {
                     <FilterListItem label={'Chờ xác nhận'} value={{deliveryStatus: 'Pending'}}/>
                     <FilterListItem label={'Đã xác nhận'} value={{deliveryStatus: 'Confirmed'}}/>
                     <FilterListItem label={'Đã thanh toán'} value={{deliveryStatus: 'Paid'}}/>
+                    <FilterListItem label={'Đang giao hàng'} value={{deliveryStatus: 'OutforDelivery'}}/>
+                    <FilterListItem label={'Đã giao hàng'} value={{deliveryStatus: 'Delivered'}}/>
+                    <FilterListItem label={'Đã hủy'} value={{deliveryStatus: 'Canceled'}}/>
                 </FilterList>
                 <FilterList label={'Phương Thức Thanh Toán'} icon={<PaymentIcon/>}>
                     <FilterListItem label={'COD'} value={{paymentMethod: 'COD'}}/>
                     <FilterListItem label={'VNPAY'} value={{paymentMethod: 'VNPAY'}}/>
                 </FilterList>
-                {/*<FilterList label={'Trạng thái'} icon={<PaidIcon/>}>*/}
-                {/*    <FilterListItem label={'Hiện'} value={{isDeleted: false}}/>*/}
-                {/*    <FilterListItem label={'Ẩn'} value={{isDeleted: true}}/>*/}
-                {/*</FilterList>*/}
             </CardContent>
         </Card>
     )

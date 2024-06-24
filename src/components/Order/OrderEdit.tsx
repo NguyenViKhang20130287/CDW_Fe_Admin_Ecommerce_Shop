@@ -19,7 +19,7 @@ export const OrderEdit = () => {
     const fetchDataDeliveryStatus = async () => {
         try {
             // https://teelab-be.up.railway.app/api/v1/order/delivery-statuses
-            const res: any = await axios.get("http://localhost:8080/api/v1/order/delivery-statuses")
+            const res: any = await axios.get("https://teelab-be.up.railway.app/api/v1/order/delivery-statuses")
             console.log('Response: ', res)
             const data = res.data.map((item: { id: any; description: any; }) => {
                 return {
