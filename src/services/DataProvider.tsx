@@ -5,7 +5,7 @@ import axios from "axios";
 import {useEffect} from "react";
 import {rejects} from "node:assert";
 
-const apiUrl = 'http://localhost:8080/api/v1'
+const apiUrl = 'https://teelab-be.up.railway.app/api/v1'
 const httpClient = fetchUtils.fetchJson
 
 // const permission = localStorage.getItem("permission")
@@ -425,7 +425,7 @@ export const dataProvider: DataProvider = {
                 }),
                 credentials: 'include'
             });
-
+            console.log('Res order: ', json)
             await addLog(`Sửa thông tin đơn hàng có id ${params.id}`)
             window.location.href = `/#/${resource}`;
             return Promise.resolve({data: json});
